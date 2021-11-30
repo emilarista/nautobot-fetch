@@ -1,5 +1,5 @@
 ---
-- hosts: "localhost"
+- hosts: localhost
 
 # tasks:
 #   # query a list of devices
@@ -35,22 +35,55 @@
 
 
   tasks:
-    - name: Obtain list of devices from Nautobot
-      set_fact:
-        devices: "{{ query('networktocode.nautobot.lookup', 'devices', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+    # - name: Obtain list of devices from Nautobot
+    #   set_fact:
+    #     devices: "{{ query('networktocode.nautobot.lookup', 'devices', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
 
-    - name: Obtain list of interfaces from Nautobot
-      set_fact:
-        interfaces: "{{ query('networktocode.nautobot.lookup', 'interfaces', api_endpoint='http://10.41.41.10:8080/', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+    # - name: Obtain list of virtual chassis from Nautobot
+    #   set_fact:
+    #     virtual_chassis: "{{ query('networktocode.nautobot.lookup', 'virtual-chassis', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
 
-    - name: Obtain list of vlans from Nautobot
-      set_fact:
-        vlans: "{{ query('networktocode.nautobot.lookup', 'vlans', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+    # - name: Obtain list of interfaces from Nautobot
+    #   set_fact:
+    #     interfaces: "{{ query('networktocode.nautobot.lookup', 'interfaces', api_endpoint='http://10.41.41.10:8080/', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
 
-    - name: Obtain list of vrfs from Nautobot
-      set_fact:
-        vrfs: "{{ query('networktocode.nautobot.lookup', 'vrfs', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+    # - name: Obtain list of vlans from Nautobot
+    #   set_fact:
+    #     vlans: "{{ query('networktocode.nautobot.lookup', 'vlans', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
 
-    - name: Print devices fact
+    # - name: Obtain list of vrfs from Nautobot
+    #   set_fact:
+    #     vrfs: "{{ query('networktocode.nautobot.lookup', 'vrfs', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+
+    # - name: Obtain list of tenants from Nautobot
+    #   set_fact:
+    #     tenants: "{{ query('networktocode.nautobot.lookup', 'tenants', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+
+    # - name: Obtain list of sites from Nautobot
+    #   set_fact:
+    #     sites: "{{ query('networktocode.nautobot.lookup', 'sites', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+
+    # - name: Obtain list of prefixes from Nautobot
+    #   set_fact:
+    #     prefixes: "{{ query('networktocode.nautobot.lookup', 'prefixes', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+
+    # - name: Obtain list of ip addrs from Nautobot
+    #   set_fact:
+    #     ip_addrs: "{{ query('networktocode.nautobot.lookup', 'ip-addresses', api_endpoint='http://10.41.41.10:8080/', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+
+    - name: Obtain list of circuits from Nautobot
+      set_fact:
+        circuits: "{{ query('networktocode.nautobot.lookup', 'circuits', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+
+    - name: Print fact
       debug:
-        msg: "{{ vrfs }}"
+        msg: "{{ circuits }}"
+
+- hosts: nautobot
+  tasks:
+    - name: Run avdbuilder
+      import_role:
+        name: avdbuilder
+      vars:
+        fabric_name: TEST-FABRIC
+        site_names: ["DC1", "DC2"]

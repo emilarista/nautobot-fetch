@@ -1,0 +1,10 @@
+---
+# defaults file for avdbuilder
+avd_version: v3
+
+# Root directory where to build output structure
+root_dir: '{{ inventory_dir if inventory_dir else (ansible_inventory_sources[0] | dirname) }}'
+
+# Main output directory
+output_dir_name: 'avdbuilder_vars'
+output_dir: '{{ root_dir }}/{{ output_dir_name }}'

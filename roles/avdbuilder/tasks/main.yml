@@ -1,0 +1,56 @@
+---
+# tasks file for avdbuilder
+- name: "Cleanup existing folders in {{ output_dir }}"
+  file:
+    path: "{{ output_dir }}"
+    state: absent
+    mode: 0775
+  delegate_to: localhost
+  run_once: True
+
+- name: "Create folder {{ output_dir }}"
+  file:
+    path: "{{ output_dir }}"
+    state: directory
+    mode: 0775
+  delegate_to: localhost
+  run_once: True
+
+- name: Generate fabric file
+  connection: local
+  template:
+    src: "{{ avd_version }}/fabric/main.j2"
+    dest: "{{ output_dir }}/{{ fabric_name }}.yml"
+    mode: 0644
+  delegate_to: localhost
+  run_once: True
+
+- name: Generate dc files
+  connection: local
+  template:
+    src: "{{ avd_version }}/dc/main.j2"
+    dest: "{{ output_dir }}/{{ item }}.yml"
+    mode: 0644
+  with_items: "{{ site_names }}"
+  delegate_to: localhost
+  run_once: True
+
+- name: Generate servers files
+  connection: local
+  template:
+    src: "{{ avd_version }}/endpoints/main.j2"
+    dest: "{{ output_dir }}/{{ item }}_SERVERS.yml"
+    mode: 0644
+  with_items: "{{ site_names }}"
+  delegate_to: localhost
+  run_once: True
+
+- name: Generate tenant services files
+  connection: local
+  template:
+    src: "{{ avd_version }}/endpoints/main.j2"
+    dest: "{{ output_dir }}/{{ item }}_TENANTS.yml"
+    mode: 0644
+  with_items: "{{ site_names }}"
+  delegate_to: localhost
+  run_once: True

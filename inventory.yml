@@ -1,0 +1,9 @@
+---
+all:
+  children:
+    NAUTOBOT:
+      hosts:
+        nautobot:
+          ansible_host: 10.41.41.10
+    CVP:
+      hosts:
