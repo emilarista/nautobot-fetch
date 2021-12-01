@@ -6,12 +6,12 @@
         name: nautobot-sync
       # debugger: always
 
-- hosts: nautobot
-  tasks:
-    - name: Run avdbuilder
-      import_role:
-        name: avdbuilder
-      vars:
-        fabric_name: TEST-FABRIC
-        site_names: ["DC1", "DC2"]
-      # debugger: always
+# - hosts: nautobot
+#   tasks:
+#     - name: Run avdbuilder
+#       import_role:
+#         name: avdbuilder
+#       vars:
+#         fabric_name: TEST-FABRIC
+#         site_names: ["DC1", "DC2"]
+#       # debugger: always
