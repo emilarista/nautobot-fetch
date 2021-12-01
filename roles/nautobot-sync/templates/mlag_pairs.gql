@@ -1,0 +1,46 @@
+query{
+  virtual_chassis(tag: "avd") {
+    name
+    cf_bgp_asn
+    cf_evpn_role
+    members {
+      name
+      status {
+        name
+      }
+      platform {
+        name
+      }
+      device_type {
+        model
+      }
+      device_role {
+        name
+      }
+      tags {
+        name
+      }
+      primary_ip4 {
+        address
+      }
+      cf_device_id
+      cf_evpn_role
+      cf_bgp_asn
+      site {
+        name
+      }
+      interfaces {
+        name
+        connected_interface {
+          device {
+            name
+          }
+          name
+        }
+        tags {
+          slug
+        }
+      }
+    }
+  }
+}
