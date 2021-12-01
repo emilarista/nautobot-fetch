@@ -1,0 +1,75 @@
+{# Inputing data from nautobot to the dc_data namespace #}
+{% set index = ansible_loop.index0 %}
+{# Finding correct site #}
+{% for site in sites %}
+{%     if site.value.name == site_names[index] %}
+{%         set dc_data.site_info = site.value %}
+{%         set dc_data.site_name = site.value.name %}
+{%     endif %}
+{% endfor %}
+{# Populating circuits #}
+{% set dc_data.circuits = [] %}
+{% for circuit in circuits %}
+{%     do dc_data.circuits.append(circuit.value) %}
+{% endfor %}
+{# Populating devices #}
+{% set dc_data.devices = [] %}
+{% for device in devices %}
+{%     if device.value.site.name == dc_data.site_name %}
+{%         do dc_data.devices.append(device.value) %}
+{%     endif %}
+{% endfor %}
+{# Populating virtual_chassis #}
+{% set dc_data.virtual_chassis = [] %}
+{% for vchassi in virtual_chassis %}
+{%     do dc_data.virtual_chassis.append(vchassi.value) %}
+{% endfor %}
+{# Grabbing defaults from hostvars #}
+{% set dc_data.dc_defaults = hostvars[inventory_hostname][dc_data.site_name].dc_defaults %}
+{% set dc_data.spine_defaults = hostvars[inventory_hostname][dc_data.site_name].spine.defaults %}
+{% set dc_data.l3leaf_defaults = hostvars[inventory_hostname][dc_data.site_name].l3leaf.defaults %}
+{% set dc_data.l2leaf_defaults = hostvars[inventory_hostname][dc_data.site_name].l2leaf.defaults %}
+{# Grabbing relevant interfaces and attaching to devices #}
+{% for dc_device in dc_data.devices %}
+{%     set dc_device_interfaces = namespace(interfaces = []) %}
+{%     for interface in interfaces %}
+{%         if interface.value.device.id == dc_device.id %}
+{%             for tag in interface.value.tags %}
+{%                 if tag.slug == "uplink" %}
+{%                     do dc_device_interfaces.interfaces.append(interface.value) %}
+{%                 elif tag.slug == "peerlink" %}
+{%                     do dc_device_interfaces.interfaces.append(interface.value) %}
+{%                 elif tag.slug == "dci-link" %}
+{%                     do dc_device_interfaces.interfaces.append(interface.value) %}
+{%                 endif %}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{%     do dc_device.update({"interfaces": dc_device_interfaces.interfaces}) %}
+{% endfor %}
+{# Building the node groups for l3leaf #}
+{% set dc_data.l3leaf_node_groups = [] %}
+{% for vchassis in dc_data.virtual_chassis %}
+{%     set l3leaf_node_group = {} %}
+{# Hacky way of determining a l3leaf #}
+{%     if vchassis.custom_fields["evpn-role"] == "client" or vchassis.custom_fields["evpn-role"] == "server" %}
+{%         set l3leaf_node_group = vchassis %}
+{%         do l3leaf_node_group.update({"nodes": []}) %}
+{%         for dc_device in dc_data.devices %}
+{%             if dc_device.virtual_chassis is defined and dc_device.virtual_chassis is not none %}
+{%                if dc_device.virtual_chassis.id == vchassis.id %}
+{%                    do l3leaf_node_group.nodes.append(dc_device) %}
+{%                endif %}
+{%             endif %}
+{%         endfor %}
+{%     do dc_data.l3leaf_node_groups.append(l3leaf_node_group) %}
+{%     endif %}
+{% endfor %}
+{# Standalone leafs need node-groups too #}
+{% for dc_device in dc_data.devices %}
+{%     if dc_device.virtual_chassis == none and dc_device.device_role.slug == "l3leaf" %}
+{%         set l3leaf_node_group = {"custom_fields": dc_device.custom_fields, "display": dc_device.display, "domain": dc_device.display, "id": dc_device.id, "master": none, "member_count": 1, "name": dc_device.name, "tags": dc_device.tags, "nodes": [dc_device]} %}
+{%         do dc_data.l3leaf_node_groups.append(l3leaf_node_group) %}
+{%     endif %}
+{% endfor %}
+{# {{ dc_data.l3leaf_node_groups | to_nice_yaml }} #}

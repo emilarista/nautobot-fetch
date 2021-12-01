@@ -1,0 +1,12 @@
+
+{'fabric_name': 'ADVANIA_FABRIC'}
+{'custom_structured_configuration_ntp': {'local_interface': {'name': 'Management1', 'vrf': 'MGMT'}, 'servers': [{'name': '0.se.pool.ntp.org', 'preferred': False, 'vrf': 'MGMT'}, {'name': '1.se.pool.ntp.org', 'preferred': True, 'vrf': 'MGMT'}]}}
+{'evpn_rd_type': {'admin_subfield': 'overlay_loopback'}}
+{'evpn_rt_type': {'admin_subfield': 65000}}
+{'bgp_maximum_paths': 4}
+{'bgp_ecmp': 4}
+{'evpn_ebgp_multihop': 10}
+{'evpn_prevent_readvertise_to_server': True}
+{'bfd_multihop': {'interval': 10000, 'min_rx': 10000, 'multiplier': 3}}
+{'vxlan_vlan_aware_bundles': False}
+{'custom_structured_configuration_switchport_default': {'mode': 'routed'}}

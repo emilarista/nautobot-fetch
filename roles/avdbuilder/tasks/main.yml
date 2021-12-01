@@ -31,7 +31,9 @@
     src: "{{ avd_version }}/dc/main.j2"
     dest: "{{ output_dir }}/{{ item }}.yml"
     mode: 0644
-  with_items: "{{ site_names }}"
+  loop: "{{ site_names }}"
+  loop_control:
+    extended: yes
   delegate_to: localhost
   run_once: True
 
@@ -41,7 +43,9 @@
     src: "{{ avd_version }}/endpoints/main.j2"
     dest: "{{ output_dir }}/{{ item }}_SERVERS.yml"
     mode: 0644
-  with_items: "{{ site_names }}"
+  loop: "{{ site_names }}"
+  loop_control:
+    extended: yes
   delegate_to: localhost
   run_once: True
 
@@ -51,6 +55,8 @@
     src: "{{ avd_version }}/endpoints/main.j2"
     dest: "{{ output_dir }}/{{ item }}_TENANTS.yml"
     mode: 0644
-  with_items: "{{ site_names }}"
+  loop: "{{ site_names }}"
+  loop_control:
+    extended: yes
   delegate_to: localhost
   run_once: True
