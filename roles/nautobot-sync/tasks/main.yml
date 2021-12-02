@@ -124,6 +124,11 @@
   run_once: true
 ###########################################################
 
+# - name: Obtain list of ip addrs from Nautobot
+#   set_fact:
+#     ip_addrs: "{{ query('networktocode.nautobot.lookup', 'ip-addresses', api_endpoint='http://10.41.41.10:8080/', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
+#   delegate_to: localhost
+
 # tasks file for nautobot-sync
 
 # - name: Obtain list of interfaces from Nautobot

@@ -52,7 +52,7 @@
 - name: Generate tenant services files
   connection: local
   template:
-    src: "{{ avd_version }}/endpoints/main.j2"
+    src: "{{ avd_version }}/services/main.j2"
     dest: "{{ output_dir }}/{{ item }}_TENANTS.yml"
     mode: 0644
   loop: "{{ site_names }}"

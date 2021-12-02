@@ -3,12 +3,18 @@
     name
     mac_vrf_vni_base: cf_base_vni
     l2vlans: vlans {
+      status {
+        name
+      }
       name
+      tags {
+        name
+      }
       site {
         name
       }
       prefixes {
-        network
+        prefix
         vrf {
           name
           tags {
@@ -20,25 +26,32 @@
     vrfs {
       ip_addresses {
         role
-        assigned_object_id
         address
         interface {
-          name
           device {
             name
           }
         }
       }
       name
+      tags {
+        name
+      }
       vrf_vni: rd
       svis: prefixes {
         site {
+          name
+        }
+        status {
           name
         }
         prefix
         vlan {
           name
           vid
+          status {
+            name
+          }
           role {
             name
           }

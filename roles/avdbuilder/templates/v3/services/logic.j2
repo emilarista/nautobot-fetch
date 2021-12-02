@@ -1,0 +1,9 @@
+{% set services_data.tenants = nb_network_services.tenants %}
+{% set index = ansible_loop.index0 %}
+{# Finding correct site so we can filter services correctly #}
+{% for site in nb_sites.sites %}
+{%     if site.name == site_names[index] %}
+{%         set services_data.site_name = site.name %}
+{%     endif %}
+{% endfor %}
+{{ services_data.tenants | emil.nbavd.structure_tenants | to_nice_yaml(indent=2) }}
