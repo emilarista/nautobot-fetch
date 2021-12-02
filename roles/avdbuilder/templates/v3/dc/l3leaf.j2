@@ -1,4 +1,53 @@
 l3leaf:
   defaults: {{ dc_data.l3leaf_defaults }}
   node_groups:
-{% %}
+{% for node_group in dc_data.l3leaf_mlag_pairs %}
+{%     if node_group.site.name == dc_data.site_name %}
+    {{ node_group.name }}:
+      filter: {{ node_group.filter }}
+      bgp_asn: {{ node_group.cf_bgp_asn }}
+      evpn_role: {{ node_group.cf_evpn_role }}
+      evpn_route_servers: {{ node_group.evpn_route_servers }}
+      nodes:
+{%        for node in node_group.members %}
+        {{ node.name }}:
+          id: {{ node.cf_device_id }}
+          mgmt_ip: {{ node.primary_ip4.address }}
+          uplink_switches:
+          uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
+{%        endfor %}
+{%     endif %}
+{% endfor %}
+{% for leaf in dc_data.standalone_leafs %}
+{%     if leaf.site.name == dc_data.site_name %}
+    {{ leaf.name }}:
+      filter: {{ leaf.filter }}
+      bgp_asn: {{ leaf.cf_bgp_asn }}
+      evpn_role: {{ leaf.cf_evpn_role }}
+      evpn_route_servers: {{ leaf.evpn_route_servers }}
+      nodes:
+        {{ leaf.name }}:
+          id: {{ leaf.cf_device_id }}
+          mgmt_ip: {{ leaf.primary_ip4.address }}
+          uplink_switches:
+          uplink_switch_interfaces: {{ leaf.uplink_switch_interfaces }}
+{%     endif %}
+{% endfor %}
+
+  {# node_groups:
+    # Server leafs definition
+    dc1-leaf01:
+      bgp_as: "65101.101"
+      filter:
+        tenants: [ all ]
+        tags: [ all ]
+      nodes:
+        # 2 nodes automatically makes it an MLAG pair.
+        dc1-leaf01a:
+          id: 1
+          mgmt_ip: 10.30.30.103/24
+          uplink_switch_interfaces: [ Ethernet1, Ethernet1 ]
+        dc1-leaf01b:
+          id: 2
+          mgmt_ip: 10.30.30.104/24
+          uplink_switch_interfaces: [ Ethernet2, Ethernet2 ] #}

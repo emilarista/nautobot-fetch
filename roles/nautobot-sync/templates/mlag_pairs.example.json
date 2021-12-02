@@ -1,0 +1,1188 @@
+{
+    "data": {
+      "virtual_chassis": [
+        {
+          "name": "dc1-borderleaf1",
+          "cf_bgp_asn": null,
+          "cf_evpn_role": "server",
+          "members": [
+            {
+              "name": "dc1-borderleaf1a",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.106/24"
+              },
+              "cf_device_id": 5,
+              "cf_evpn_role": "server",
+              "cf_bgp_asn": "65103",
+              "site": {
+                "name": "DC1"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            },
+            {
+              "name": "dc1-borderleaf1b",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.107/24"
+              },
+              "cf_device_id": 6,
+              "cf_evpn_role": "server",
+              "cf_bgp_asn": "65103",
+              "site": {
+                "name": "DC1"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dc1-leaf01",
+          "cf_bgp_asn": null,
+          "cf_evpn_role": "client",
+          "members": [
+            {
+              "name": "dc1-leaf01a",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.102/24"
+              },
+              "cf_device_id": 1,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65101",
+              "site": {
+                "name": "DC1"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": {
+                    "device": {
+                      "name": "A_Router_01"
+                    },
+                    "name": "Ethernet1"
+                  },
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": {
+                    "device": {
+                      "name": "A_ESXi01"
+                    },
+                    "name": "Eth0"
+                  },
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            },
+            {
+              "name": "dc1-leaf01b",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.103/24"
+              },
+              "cf_device_id": 2,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65101",
+              "site": {
+                "name": "DC1"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": {
+                    "device": {
+                      "name": "A_Router_01"
+                    },
+                    "name": "Ethernet2"
+                  },
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": {
+                    "device": {
+                      "name": "A_ESXi01"
+                    },
+                    "name": "Eth1"
+                  },
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dc1-leaf2",
+          "cf_bgp_asn": null,
+          "cf_evpn_role": "client",
+          "members": [
+            {
+              "name": "dc1-leaf02a",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.104/24"
+              },
+              "cf_device_id": 3,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65102",
+              "site": {
+                "name": "DC1"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": {
+                    "device": {
+                      "name": "B_Router_01"
+                    },
+                    "name": "Ethernet1"
+                  },
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Port-channel5",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            },
+            {
+              "name": "dc1-leaf02b",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.105/24"
+              },
+              "cf_device_id": 4,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65102",
+              "site": {
+                "name": "DC1"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": {
+                    "device": {
+                      "name": "B_Router_01"
+                    },
+                    "name": "Ethernet2"
+                  },
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Port-channel5",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dc2-borderleaf1",
+          "cf_bgp_asn": null,
+          "cf_evpn_role": "server",
+          "members": [
+            {
+              "name": "dc2-borderleaf1a",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.114/24"
+              },
+              "cf_device_id": 5,
+              "cf_evpn_role": "server",
+              "cf_bgp_asn": "65203",
+              "site": {
+                "name": "DC2"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            },
+            {
+              "name": "dc2-borderleaf1b",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.115/24"
+              },
+              "cf_device_id": 6,
+              "cf_evpn_role": "server",
+              "cf_bgp_asn": "65203",
+              "site": {
+                "name": "DC2"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "dci-link"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dc2-leaf1",
+          "cf_bgp_asn": null,
+          "cf_evpn_role": "client",
+          "members": [
+            {
+              "name": "dc2-leaf01a",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.110/24"
+              },
+              "cf_device_id": 1,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65201",
+              "site": {
+                "name": "DC2"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            },
+            {
+              "name": "dc2-leaf01b",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.111/24"
+              },
+              "cf_device_id": 2,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65201",
+              "site": {
+                "name": "DC2"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dc2-leaf2",
+          "cf_bgp_asn": null,
+          "cf_evpn_role": "client",
+          "members": [
+            {
+              "name": "dc2-leaf02a",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.112/24"
+              },
+              "cf_device_id": 3,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65202",
+              "site": {
+                "name": "DC2"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            },
+            {
+              "name": "dc2-leaf02b",
+              "status": {
+                "name": "Active"
+              },
+              "device_type": {
+                "model": "vEOS-lab"
+              },
+              "device_role": {
+                "name": "l3leaf"
+              },
+              "tags": [
+                {
+                  "name": "avd"
+                }
+              ],
+              "primary_ip4": {
+                "address": "10.30.30.113/24"
+              },
+              "cf_device_id": 4,
+              "cf_evpn_role": "client",
+              "cf_bgp_asn": "65202",
+              "site": {
+                "name": "DC2"
+              },
+              "interfaces": [
+                {
+                  "name": "Ethernet1",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet2",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "uplink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet3",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet4",
+                  "connected_interface": null,
+                  "tags": [
+                    {
+                      "slug": "peerlink"
+                    }
+                  ]
+                },
+                {
+                  "name": "Ethernet5",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet6",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet7",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Ethernet8",
+                  "connected_interface": null,
+                  "tags": []
+                },
+                {
+                  "name": "Management1",
+                  "connected_interface": null,
+                  "tags": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }

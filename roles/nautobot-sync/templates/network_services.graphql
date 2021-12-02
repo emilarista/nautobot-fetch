@@ -1,0 +1,52 @@
+{
+  tenants(tag: "avd") {
+    name
+    mac_vrf_vni_base: cf_base_vni
+    l2vlans: vlans {
+      name
+      site {
+        name
+      }
+      prefixes {
+        network
+        vrf {
+          name
+          tags {
+            name
+          }
+        }
+      }
+    }
+    vrfs {
+      ip_addresses {
+        role
+        assigned_object_id
+        address
+        interface {
+          name
+          device {
+            name
+          }
+        }
+      }
+      name
+      vrf_vni: rd
+      svis: prefixes {
+        site {
+          name
+        }
+        prefix
+        vlan {
+          name
+          vid
+          role {
+            name
+          }
+          tags {
+            name
+          }
+        }
+      }
+    }
+  }
+}

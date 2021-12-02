@@ -1,16 +1,13 @@
-{# Render DC Name from site name #}
-dc_name: {{ dc_data.site_name }}
-
 {# Render Spines #}
 spine:
   defaults: {{ dc_data.spine_defaults }}
   nodes:
-{% for dc_device in dc_data.devices %}
-{%     if dc_device.device_role.slug == "spine" %}
-    {{ dc_device.name }}:
-      evpn_role: {{ dc_device.custom_fields["evpn-role"] }}
-      id: {{ dc_device.custom_fields["device-id"] }}
-      mgmt_ip: {{ dc_device.primary_ip4.address }}
+{% for spine in dc_data.spines %}
+{%     if spine.site.name == dc_data.site_name %}
+    {{ spine.name }}:
+      evpn_role: {{ spine.cf_evpn_role }}
+      id: {{ spine.cf_device_id }}
+      mgmt_ip: {{ spine.primary_ip4.address }}
 {%     endif %}
 {% endfor %}
 

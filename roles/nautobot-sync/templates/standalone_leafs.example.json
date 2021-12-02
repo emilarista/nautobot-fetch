@@ -1,0 +1,32 @@
+{
+  "data": {
+    "devices": [
+      {
+        "name": "dc1-leaf03",
+        "status": {
+          "name": "Active"
+        },
+        "device_type": {
+          "model": "vEOS-lab"
+        },
+        "device_role": {
+          "name": "l3leaf"
+        },
+        "tags": [
+          {
+            "name": "avd"
+          }
+        ],
+        "primary_ip4": {
+          "address": "10.30.30.116/24"
+        },
+        "cf_device_id": 7,
+        "cf_evpn_role": "client",
+        "cf_bgp_asn": "65104",
+        "site": {
+          "name": "DC1"
+        }
+      }
+    ]
+  }
+}

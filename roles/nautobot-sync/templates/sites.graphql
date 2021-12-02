@@ -1,0 +1,9 @@
+query{
+  sites {
+    name
+    asn
+    tags {
+      name
+    }
+  }
+}

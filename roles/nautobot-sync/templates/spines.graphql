@@ -1,0 +1,20 @@
+query{
+  devices(role:"spine", tag: "avd") {
+    name
+    status {
+      name
+    }
+    device_type {
+      model
+    }
+    cf_bgp_asn
+    cf_device_id
+    cf_evpn_role
+    primary_ip4 {
+        address
+      }
+    site {
+      name
+    }
+  }
+}

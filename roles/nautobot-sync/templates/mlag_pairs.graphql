@@ -8,9 +8,6 @@ query{
       status {
         name
       }
-      platform {
-        name
-      }
       device_type {
         model
       }

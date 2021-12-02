@@ -1,0 +1,8 @@
+query{
+  devices(cf_evpn_role: "server", tag: "avd") {
+    name
+    site {
+      name
+    }
+  }
+}

@@ -9,11 +9,11 @@
   tasks:
     - name: Get nautobot mlag pairs
       uri:
-        url: "http://10.41.41.10:8080/api/graphql/"
+        url: "http://{{ ansible_host }}:8080/api/graphql/"
         validate_certs: no
         method: POST
         headers:
-          Authorization: 'Token ff0fa3e62e02faa83c0dbd36a3395cc688c84051'
+          Authorization: 'Token {{ api_token }}'
         body_format: json
         body:
           query: '{{ lookup("template", "roles/nautobot-sync/templates/mlag_pairs.graphql") }}'

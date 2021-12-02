@@ -1,0 +1,26 @@
+{
+  devices(cf_evpn_role: "client", tag: "avd", virtual_chassis_member: false) {
+    name
+    status {
+      name
+    }
+    device_type {
+      model
+    }
+    device_role {
+      name
+    }
+    tags {
+      name
+    }
+    primary_ip4 {
+      address
+    }
+    cf_device_id
+    cf_evpn_role
+    cf_bgp_asn
+    site {
+      name
+    }
+  }
+}

@@ -1,0 +1,465 @@
+{
+    "data": {
+      "tenants": [
+        {
+          "name": "TENANT_A",
+          "mac_vrf_vni_base": 10000,
+          "l2vlans": [
+            {
+              "name": "A_APP_1",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.10.0",
+                  "vrf": {
+                    "name": "A_APP",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "A_APP_2",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.11.0",
+                  "vrf": {
+                    "name": "A_APP",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "A_DB_1",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.20.0",
+                  "vrf": {
+                    "name": "A_DB",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "A_WEB_1",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.30.0",
+                  "vrf": {
+                    "name": "A_WEB",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "vrfs": [
+            {
+              "ip_addresses": [
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.10.1/24",
+                  "interface": null
+                },
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.11.1/24",
+                  "interface": null
+                },
+                {
+                  "role": null,
+                  "assigned_object_id": "4a0ebd6d-8246-45e2-9b51-5ee801cea8fa",
+                  "address": "123.1.2.1/30",
+                  "interface": {
+                    "name": "Ethernet5",
+                    "device": {
+                      "name": "dc1-leaf01a"
+                    }
+                  }
+                },
+                {
+                  "role": null,
+                  "assigned_object_id": "4776e610-80bd-4d17-b2c0-dabc6829b626",
+                  "address": "123.1.2.5/30",
+                  "interface": {
+                    "name": "Ethernet5",
+                    "device": {
+                      "name": "dc1-leaf01b"
+                    }
+                  }
+                },
+                {
+                  "role": null,
+                  "assigned_object_id": "86e2255f-07ce-4505-a35a-3a1e8730e659",
+                  "address": "123.4.5.6/32",
+                  "interface": {
+                    "name": "Ethernet7",
+                    "device": {
+                      "name": "dc1-borderleaf1a"
+                    }
+                  }
+                }
+              ],
+              "name": "A_APP",
+              "vrf_vni": "10",
+              "svis": [
+                {
+                  "site": null,
+                  "prefix": "10.0.10.0/24",
+                  "vlan": {
+                    "name": "A_APP_1",
+                    "vid": 10,
+                    "role": {
+                      "name": "access"
+                    },
+                    "tags": [
+                      {
+                        "name": "app"
+                      },
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "site": null,
+                  "prefix": "10.0.11.0/24",
+                  "vlan": {
+                    "name": "A_APP_2",
+                    "vid": 11,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "app"
+                      },
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "ip_addresses": [
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.20.1/24",
+                  "interface": null
+                }
+              ],
+              "name": "A_DB",
+              "vrf_vni": "11",
+              "svis": [
+                {
+                  "site": null,
+                  "prefix": "10.0.20.0/24",
+                  "vlan": {
+                    "name": "A_DB_1",
+                    "vid": 20,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "avd"
+                      },
+                      {
+                        "name": "db"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "ip_addresses": [
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.30.1/24",
+                  "interface": null
+                }
+              ],
+              "name": "A_WEB",
+              "vrf_vni": "12",
+              "svis": [
+                {
+                  "site": null,
+                  "prefix": "10.0.30.0/24",
+                  "vlan": {
+                    "name": "A_WEB_1",
+                    "vid": 30,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "avd"
+                      },
+                      {
+                        "name": "web"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "TENANT_B",
+          "mac_vrf_vni_base": 20000,
+          "l2vlans": [
+            {
+              "name": "B_APP_1",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.40.0",
+                  "vrf": {
+                    "name": "B_APP",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "B_DB_1",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.50.0",
+                  "vrf": {
+                    "name": "B_DB",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "B_DB_2",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.51.0",
+                  "vrf": {
+                    "name": "B_DB",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "B_WEB_1",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.60.0",
+                  "vrf": {
+                    "name": "B_WEB",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "B_WEB_2",
+              "site": null,
+              "prefixes": [
+                {
+                  "network": "10.0.61.0",
+                  "vrf": {
+                    "name": "B_WEB",
+                    "tags": [
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "vrfs": [
+            {
+              "ip_addresses": [
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.40.1/24",
+                  "interface": null
+                }
+              ],
+              "name": "B_APP",
+              "vrf_vni": "20",
+              "svis": [
+                {
+                  "site": null,
+                  "prefix": "10.0.40.0/24",
+                  "vlan": {
+                    "name": "B_APP_1",
+                    "vid": 40,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "app"
+                      },
+                      {
+                        "name": "avd"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "ip_addresses": [
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.50.1/24",
+                  "interface": null
+                },
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.51.1/24",
+                  "interface": null
+                }
+              ],
+              "name": "B_DB",
+              "vrf_vni": "21",
+              "svis": [
+                {
+                  "site": null,
+                  "prefix": "10.0.50.0/24",
+                  "vlan": {
+                    "name": "B_DB_1",
+                    "vid": 50,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "avd"
+                      },
+                      {
+                        "name": "db"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "site": null,
+                  "prefix": "10.0.51.0/24",
+                  "vlan": {
+                    "name": "B_DB_2",
+                    "vid": 51,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "avd"
+                      },
+                      {
+                        "name": "db"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "ip_addresses": [
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.60.1/24",
+                  "interface": null
+                },
+                {
+                  "role": "ANYCAST",
+                  "assigned_object_id": null,
+                  "address": "10.0.61.1/24",
+                  "interface": null
+                }
+              ],
+              "name": "B_WEB",
+              "vrf_vni": "22",
+              "svis": [
+                {
+                  "site": null,
+                  "prefix": "10.0.60.0/24",
+                  "vlan": {
+                    "name": "B_WEB_1",
+                    "vid": 60,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "avd"
+                      },
+                      {
+                        "name": "web"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "site": null,
+                  "prefix": "10.0.61.0/24",
+                  "vlan": {
+                    "name": "B_WEB_2",
+                    "vid": 61,
+                    "role": null,
+                    "tags": [
+                      {
+                        "name": "avd"
+                      },
+                      {
+                        "name": "web"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }

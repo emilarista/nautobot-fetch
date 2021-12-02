@@ -1,3 +1,4 @@
-{% for setting in fabric_data.defaults %}
+{# {% for setting in fabric_data.defaults %}
 {{ setting }}
-{% endfor %}
+{% endfor %} #}
+{{ fabric_data.defaults | to_nice_yaml(indent=2) }}
