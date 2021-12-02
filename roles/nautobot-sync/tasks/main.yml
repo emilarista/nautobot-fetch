@@ -1,4 +1,5 @@
 ---
+######### Retrieve MLAG Pairs from Nautobot ###############
 - name: Get nautobot mlag pairs
   uri:
     url: "http://{{ ansible_host }}:8080/api/graphql/"
@@ -16,7 +17,10 @@
   set_fact:
     nb_mlag_pairs: "{{ nautobot_mlag_pairs_query.json.data }}"
   run_once: true
+###########################################################
 
+
+######### Retrieve Standalone Leafs from Nautobot #########
 - name: Get nautobot standalone leafs
   uri:
     url: "http://{{ ansible_host }}:8080/api/graphql/"
@@ -34,7 +38,10 @@
   set_fact:
     nb_standalone_leafs: "{{ nautobot_standalone_leafs_query.json.data }}"
   run_once: true
+###########################################################
 
+
+######### Retrieve Spines from Nautobot ###################
 - name: Get nautobot spines
   uri:
     url: "http://{{ ansible_host }}:8080/api/graphql/"
@@ -52,7 +59,10 @@
   set_fact:
     nb_spines: "{{ nautobot_spines_query.json.data }}"
   run_once: true
+###########################################################
 
+
+######### Retrieve Sites list from Nautobot ###############
 - name: Get nautobot sites list
   uri:
     url: "http://{{ ansible_host }}:8080/api/graphql/"
@@ -70,7 +80,10 @@
   set_fact:
     nb_sites: "{{ nautobot_sites_query.json.data }}"
   run_once: true
+###########################################################
 
+
+######### Retrieve EPVN Route-servers from Nautobot #######
 - name: Get nautobot evpn route-servers list
   uri:
     url: "http://{{ ansible_host }}:8080/api/graphql/"
@@ -88,37 +101,34 @@
   set_fact:
     nb_route_servers: "{{ nautobot_route_servers_query.json.data }}"
   run_once: true
+###########################################################
+
+
+######### Retrieve Network Services from Nautobot #########
+- name: Get nautobot network services info
+  uri:
+    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    validate_certs: no
+    method: POST
+    headers:
+      Authorization: 'Token {{ api_token }}'
+    body_format: json
+    body:
+      query: '{{ lookup("template", "roles/nautobot-sync/templates/network_services.graphql") }}'
+  register: nautobot_network_services_query
+  run_once: true
+
+- name: Set network services fact
+  set_fact:
+    nb_network_services: "{{ nautobot_network_services_query.json.data }}"
+  run_once: true
+###########################################################
 
 # tasks file for nautobot-sync
 
 # - name: Obtain list of interfaces from Nautobot
 #   set_fact:
 #     interfaces: "{{ query('networktocode.nautobot.lookup', 'interfaces', api_endpoint='http://10.41.41.10:8080/', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
-#   delegate_to: localhost
-
-# - name: Obtain list of vlans from Nautobot
-#   set_fact:
-#     vlans: "{{ query('networktocode.nautobot.lookup', 'vlans', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
-#   delegate_to: localhost
-
-# - name: Obtain list of vrfs from Nautobot
-#   set_fact:
-#     vrfs: "{{ query('networktocode.nautobot.lookup', 'vrfs', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
-#   delegate_to: localhost
-
-# - name: Obtain list of tenants from Nautobot
-#   set_fact:
-#     tenants: "{{ query('networktocode.nautobot.lookup', 'tenants', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
-#   delegate_to: localhost
-
-# - name: Obtain list of prefixes from Nautobot
-#   set_fact:
-#     prefixes: "{{ query('networktocode.nautobot.lookup', 'prefixes', api_endpoint='http://10.41.41.10:8080/', api_filter='tag=avd', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
-#   delegate_to: localhost
-
-# - name: Obtain list of ip addrs from Nautobot
-#   set_fact:
-#     ip_addrs: "{{ query('networktocode.nautobot.lookup', 'ip-addresses', api_endpoint='http://10.41.41.10:8080/', token='ff0fa3e62e02faa83c0dbd36a3395cc688c84051') }}"
 #   delegate_to: localhost
 
 # - name: Obtain list of circuits from Nautobot
