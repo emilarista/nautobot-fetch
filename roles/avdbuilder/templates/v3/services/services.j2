@@ -1,0 +1,67 @@
+tenants:
+{% for tenant in services_data.tenants | emil.nbavd.structure_tenants %}
+  {{ tenant.name }}:
+    mac_vrf_vni_base: {{ tenant.mac_vrf_vni_base }}
+    l2vlans:
+{%     for l2vlan in tenant.l2vlans %}
+{%         if (l2vlan.site == services_data.site_name or l2vlan.site == none) and l2vlan.status.name == "Active" %}
+      {{ l2vlan.vid }}:
+        name: {{ l2vlan.name }}
+{%             set service_tags = [] %}
+{%             for tag in l2vlan.tags %}
+{%                 if tag.name | lower != "avd" %}
+{%                     do service_tags.append(tag.name) %}
+{%                 endif %}
+{%             endfor %}
+        tags: {{ service_tags }}
+{%         endif %}
+{%     endfor %}
+    vrfs:
+{%     for vrf in tenant.vrfs %}
+      {{ vrf.name }}:
+        vrf_vni: {{ vrf.vrf_vni }}
+        svis:
+{%         for svi in vrf.svis %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and (svi.site ==  services_data.site_name or svi.site == none) %}
+          {{ svi.vlan.vid }}:
+            enabled: true
+            name: {{ svi.vlan.name }}
+{%                 for ip in svi.ip_addresses %}
+{%                     set service_nodes = namespace() %}
+{%                     if ip.type == "ANYCAST" %}
+            ip_address_virtual: {{ ip.address }}
+{%                     endif %}
+{%                 endfor %}
+{%             endif %}
+{%         endfor %}
+{%     endfor %}
+{% endfor %}
+
+{#
+vrfs:
+      TENANT_A_INSIDE:
+        vrf_vni: 10
+        bgp_peers:
+          10.0.255.4:
+            remote_as: 1234
+            description: Firewall
+            # password is DogeLet!
+            password: $1c$0gqqCt6BsFxvVktWYuvBGQ==
+            send_community: standard
+            maximum_routes: 10000
+            set_ipv4_next_hop: 10.0.255.1
+            nodes: [ dc1-borderleaf01a, dc1-borderleaf01b ]
+            local_as: 65000
+        svis:
+          10:
+            enabled: true
+            ip_address_virtual: 10.0.1.1/24
+            name: TENANT_A_INSIDE_L3_TEST_1
+            tags:
+            - fabricwide
+          20:
+            enabled: true
+            ip_address_virtual: 10.0.2.1/24
+            name: TENANT_A_INSIDE_L3_TEST_2
+            tags:
+            - fabricwide #}

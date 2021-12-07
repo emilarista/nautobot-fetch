@@ -1,316 +1,75 @@
 ---
-- l2vlans:
-  - name: TENANT_A_l2vlan_789
-    prefixes:
-    - prefix: 10.78.9.0/24
-      vrf: null
-    site: null
-    status:
-      name: Active
-    tags:
-    - name: avd
-  mac_vrf_vni_base: 10000
-  name: TENANT_A
-  vrfs:
-  - ip_addresses:
-    - address: 10.0.10.1/24
-      interface: null
-      role: ANYCAST
-    - address: 10.0.11.1/24
-      interface: null
-      role: ANYCAST
-    - address: 123.1.2.1/30
-      interface:
-        device:
-          name: dc1-leaf01a
-      role: null
-    - address: 123.1.2.5/30
-      interface:
-        device:
-          name: dc1-leaf01b
-      role: null
-    - address: 123.4.5.6/32
-      interface:
-        device:
-          name: dc1-borderleaf1a
-      role: null
-    name: A_APP
-    svis:
-    - ip_addresses:
-      - address: 10.0.10.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.10.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: A_APP_1
-        role:
-          name: access
-        status:
-          name: Active
-        tags:
-        - name: app
-        - name: avd
-        vid: 10
-    - ip_addresses:
-      - address: 10.0.11.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.11.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: A_APP_2
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: app
-        - name: avd
-        vid: 11
-    tags:
-    - name: avd
-    vrf_vni: '10'
-  - ip_addresses:
-    - address: 10.0.20.1/24
-      interface: null
-      role: ANYCAST
-    name: A_DB
-    svis:
-    - ip_addresses:
-      - address: 10.0.20.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.20.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: A_DB_1
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: avd
-        - name: db
-        vid: 20
-    tags:
-    - name: avd
-    vrf_vni: '11'
-  - ip_addresses:
-    - address: 10.0.30.1/24
-      interface: null
-      role: ANYCAST
-    - address: 10.0.56.1/24
-      interface: null
-      role: VIP
-    - address: 10.0.56.2/24
-      interface:
-        device:
-          name: dc1-borderleaf1a
-      role: SECONDARY
-    - address: 10.0.56.3/24
-      interface:
-        device:
-          name: dc1-borderleaf1b
-      role: SECONDARY
-    - address: 10.0.57.1/24
-      interface:
-        device:
-          name: dc1-borderleaf1a
-      role: SECONDARY
-    - address: 10.0.57.2/24
-      interface:
-        device:
-          name: dc1-borderleaf1b
-      role: SECONDARY
-    name: A_WEB
-    svis:
-    - ip_addresses:
-      - address: 10.0.30.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.30.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: A_WEB_1
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: avd
-        - name: web
-        vid: 30
-    - ip_addresses:
-      - address: 10.0.56.1/24
-        device: null
-        type: VIP
-      - address: 10.0.56.2/24
-        device: dc1-borderleaf1a
-        type: SECONDARY
-      - address: 10.0.56.3/24
-        device: dc1-borderleaf1b
-        type: SECONDARY
-      prefix: 10.0.56.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: peering_vlan
-        role:
-          name: peering
-        status:
-          name: Active
-        tags:
-        - name: avd
-        vid: 56
-    - ip_addresses:
-      - address: 10.0.57.1/24
-        device: dc1-borderleaf1a
-        type: SECONDARY
-      - address: 10.0.57.2/24
-        device: dc1-borderleaf1b
-        type: SECONDARY
-      prefix: 10.0.57.0/24
-      site: null
-      status:
-        name: Active
-      vlan: null
-    tags:
-    - name: avd
-    vrf_vni: '12'
-- l2vlans:
-  - name: TENANT_B_l2vlan_456
-    prefixes: []
-    site: null
-    status:
-      name: Active
-    tags:
-    - name: avd
-  mac_vrf_vni_base: 20000
-  name: TENANT_B
-  vrfs:
-  - ip_addresses:
-    - address: 10.0.40.1/24
-      interface: null
-      role: ANYCAST
-    name: B_APP
-    svis:
-    - ip_addresses:
-      - address: 10.0.40.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.40.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: B_APP_1
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: app
-        - name: avd
-        vid: 40
-    tags:
-    - name: avd
-    vrf_vni: '20'
-  - ip_addresses:
-    - address: 10.0.50.1/24
-      interface: null
-      role: ANYCAST
-    - address: 10.0.51.1/24
-      interface: null
-      role: ANYCAST
-    name: B_DB
-    svis:
-    - ip_addresses:
-      - address: 10.0.50.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.50.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: B_DB_1
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: avd
-        - name: db
-        vid: 50
-    - ip_addresses:
-      - address: 10.0.51.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.51.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: B_DB_2
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: avd
-        - name: db
-        vid: 51
-    tags:
-    - name: avd
-    vrf_vni: '21'
-  - ip_addresses:
-    - address: 10.0.60.1/24
-      interface: null
-      role: ANYCAST
-    - address: 10.0.61.1/24
-      interface: null
-      role: ANYCAST
-    name: B_WEB
-    svis:
-    - ip_addresses:
-      - address: 10.0.60.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.60.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: B_WEB_1
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: avd
-        - name: web
-        vid: 60
-    - ip_addresses:
-      - address: 10.0.61.1/24
-        device: null
-        type: ANYCAST
-      prefix: 10.0.61.0/24
-      site: null
-      status:
-        name: Active
-      vlan:
-        name: B_WEB_2
-        role: null
-        status:
-          name: Active
-        tags:
-        - name: avd
-        - name: web
-        vid: 61
-    tags:
-    - name: avd
-    vrf_vni: '22'
+
+tenants:
+  TENANT_A:
+    mac_vrf_vni_base: 10000
+    l2vlans:
+      789:
+        name: TENANT_A_l2vlan_789
+        tags: []
+    vrfs:
+      A_APP:
+        vrf_vni: 10
+        svis:
+          10:
+            enabled: true
+            name: A_APP_1
+            ip_address_virtual: 10.0.10.1/24
+          11:
+            enabled: true
+            name: A_APP_2
+            ip_address_virtual: 10.0.11.1/24
+      A_DB:
+        vrf_vni: 11
+        svis:
+          20:
+            enabled: true
+            name: A_DB_1
+            ip_address_virtual: 10.0.20.1/24
+      A_WEB:
+        vrf_vni: 12
+        svis:
+          30:
+            enabled: true
+            name: A_WEB_1
+            ip_address_virtual: 10.0.30.1/24
+          56:
+            enabled: true
+            name: peering_vlan
+  TENANT_B:
+    mac_vrf_vni_base: 20000
+    l2vlans:
+      456:
+        name: TENANT_B_l2vlan_456
+        tags: []
+    vrfs:
+      B_APP:
+        vrf_vni: 20
+        svis:
+          40:
+            enabled: true
+            name: B_APP_1
+            ip_address_virtual: 10.0.40.1/24
+      B_DB:
+        vrf_vni: 21
+        svis:
+          50:
+            enabled: true
+            name: B_DB_1
+            ip_address_virtual: 10.0.50.1/24
+          51:
+            enabled: true
+            name: B_DB_2
+            ip_address_virtual: 10.0.51.1/24
+      B_WEB:
+        vrf_vni: 22
+        svis:
+          60:
+            enabled: true
+            name: B_WEB_1
+            ip_address_virtual: 10.0.60.1/24
+          61:
+            enabled: true
+            name: B_WEB_2
+            ip_address_virtual: 10.0.61.1/24
 
