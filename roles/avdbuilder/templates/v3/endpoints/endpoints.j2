@@ -4,7 +4,7 @@ servers:
 {%     for interface in device.interfaces %}
 {# Render non-mlag first, connection name should be description or connected device name  #}
 {%         if "Ethernet" in interface.name and interface.parent_lag == none %}
-{%             set connection_name = %}
+{%             if interface.connected_interface%}
 {%         endif %}
 {# render mlag first, just check that parent_lag == none for other interfaces before render. #}
 {%         if %}

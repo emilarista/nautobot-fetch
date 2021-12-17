@@ -25,7 +25,153 @@
         "cf_bgp_asn": "65104",
         "site": {
           "name": "DC1"
-        }
+        },
+        "interfaces": [
+          {
+            "name": "Ethernet1",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet2",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet3",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet4",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet5",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet6",
+            "description": "Taken_from_description",
+            "member_interfaces": [],
+            "untagged_vlan": {
+              "vid": 40
+            },
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": "storm-control broadcast level 10,storm-control unknown-unicast level 10",
+            "mode": "ACCESS",
+            "mtu": 1500,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet7",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": {
+              "vid": 10
+            },
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": "storm-control broadcast level 15,storm-control unknown-unicast level 15",
+            "mode": "TAGGED_ALL",
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Ethernet8",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "VIRTUAL",
+            "enabled": true,
+            "ip_addresses": [],
+            "connected_interface": null,
+            "tags": []
+          },
+          {
+            "name": "Management1",
+            "description": "",
+            "member_interfaces": [],
+            "untagged_vlan": null,
+            "tagged_vlans": [],
+            "cf_raw_eos_cli": null,
+            "mode": null,
+            "mtu": null,
+            "type": "A_1000BASE_T",
+            "enabled": true,
+            "ip_addresses": [
+              {
+                "address": "10.30.30.116/24",
+                "vrf": null
+              }
+            ],
+            "connected_interface": null,
+            "tags": []
+          }
+        ]
       }
     ]
   }
