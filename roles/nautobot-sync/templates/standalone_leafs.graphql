@@ -22,5 +22,42 @@
     site {
       name
     }
+    interfaces {
+      name
+      description
+      member_interfaces {
+        name
+        device {
+          name
+        }
+      }
+      untagged_vlan {
+        vid
+      }
+      tagged_vlans {
+        vid
+      }
+      cf_raw_eos_cli
+      mode
+      mtu
+      type
+      enabled
+      ip_addresses {
+        address
+        vrf {
+          name
+        }
+      }
+      connected_interface {
+        device {
+          name
+          cf_bgp_asn
+        }
+        name
+      }
+      tags {
+        slug
+      }
+    }
   }
 }

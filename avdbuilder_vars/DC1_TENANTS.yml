@@ -6,7 +6,7 @@ tenants:
     l2vlans:
       789:
         name: TENANT_A_l2vlan_789
-        tags: []
+        tags: ['avd']
     vrfs:
       A_APP:
         vrf_vni: 10
@@ -15,10 +15,32 @@ tenants:
             enabled: true
             name: A_APP_1
             ip_address_virtual: 10.0.10.1/24
+            tags:
+              - app
+              - avd
           11:
             enabled: true
             name: A_APP_2
             ip_address_virtual: 10.0.11.1/24
+            tags:
+              - app
+              - avd
+        l3_interfaces:
+          - interfaces: [ Ethernet7 ]
+            ip_addresses: [ 123.4.5.6/32 ]
+            enabled: true
+            nodes: [ dc1-borderleaf1a ]
+            description: Customer TENANT_A vrf A_APP routed interface
+          - interfaces: [ Ethernet5 ]
+            ip_addresses: [ 123.1.2.1/30 ]
+            enabled: true
+            nodes: [ dc1-leaf01a ]
+            description: Customer TENANT_A vrf A_APP routed interface
+          - interfaces: [ Ethernet5 ]
+            ip_addresses: [ 123.1.2.5/30 ]
+            enabled: true
+            nodes: [ dc1-leaf01b ]
+            description: Customer TENANT_A vrf A_APP routed interface
       A_DB:
         vrf_vni: 11
         svis:
@@ -26,22 +48,42 @@ tenants:
             enabled: true
             name: A_DB_1
             ip_address_virtual: 10.0.20.1/24
+            tags:
+              - avd
+              - db
+        l3_interfaces:
       A_WEB:
         vrf_vni: 12
+        ospf:
+          enabled: true
         svis:
           30:
             enabled: true
             name: A_WEB_1
             ip_address_virtual: 10.0.30.1/24
+            tags:
+              - avd
+              - web
           56:
             enabled: true
             name: peering_vlan
+            ip_virtual_router_address: 10.0.56.1
+            nodes:
+              dc1-borderleaf1a:
+                ip_address: 10.0.56.2/24
+              dc1-borderleaf1b:
+                ip_address: 10.0.56.3/24
+            tags:
+              - avd
+            ospf:
+              enabled: true
+        l3_interfaces:
   TENANT_B:
     mac_vrf_vni_base: 20000
     l2vlans:
       456:
         name: TENANT_B_l2vlan_456
-        tags: []
+        tags: ['avd']
     vrfs:
       B_APP:
         vrf_vni: 20
@@ -50,6 +92,10 @@ tenants:
             enabled: true
             name: B_APP_1
             ip_address_virtual: 10.0.40.1/24
+            tags:
+              - app
+              - avd
+        l3_interfaces:
       B_DB:
         vrf_vni: 21
         svis:
@@ -57,10 +103,17 @@ tenants:
             enabled: true
             name: B_DB_1
             ip_address_virtual: 10.0.50.1/24
+            tags:
+              - avd
+              - db
           51:
             enabled: true
             name: B_DB_2
             ip_address_virtual: 10.0.51.1/24
+            tags:
+              - avd
+              - db
+        l3_interfaces:
       B_WEB:
         vrf_vni: 22
         svis:
@@ -68,8 +121,353 @@ tenants:
             enabled: true
             name: B_WEB_1
             ip_address_virtual: 10.0.60.1/24
+            tags:
+              - avd
+              - web
           61:
             enabled: true
             name: B_WEB_2
             ip_address_virtual: 10.0.61.1/24
+            tags:
+              - avd
+              - web
+        l3_interfaces:
 
+- l2vlans:
+  - name: TENANT_A_l2vlan_789
+    prefixes:
+    - prefix: 10.78.9.0/24
+      vrf: null
+    site: null
+    status:
+      name: Active
+    tags:
+    - name: avd
+    vid: 789
+  mac_vrf_vni_base: 10000
+  name: TENANT_A
+  vrfs:
+  - _custom_field_data:
+      ospf_enabled: false
+    ip_addresses:
+    - address: 10.0.10.1/24
+      interface: null
+      role: ANYCAST
+    - address: 10.0.11.1/24
+      interface: null
+      role: ANYCAST
+    - address: 123.1.2.1/30
+      interface:
+        device:
+          name: dc1-leaf01a
+      role: null
+    - address: 123.1.2.5/30
+      interface:
+        device:
+          name: dc1-leaf01b
+      role: null
+    - address: 123.4.5.6/32
+      interface:
+        device:
+          name: dc1-borderleaf1a
+      role: null
+    name: A_APP
+    svis:
+    - ip_addresses:
+      - address: 10.0.10.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.10.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: A_APP_1
+        role:
+          name: access
+        status:
+          name: Active
+        tags:
+        - name: app
+        - name: avd
+        vid: 10
+    - ip_addresses:
+      - address: 10.0.11.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.11.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: A_APP_2
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: app
+        - name: avd
+        vid: 11
+    tags:
+    - name: avd
+    vrf_vni: '10'
+  - _custom_field_data:
+      ospf_enabled: null
+    ip_addresses:
+    - address: 10.0.20.1/24
+      interface: null
+      role: ANYCAST
+    name: A_DB
+    svis:
+    - ip_addresses:
+      - address: 10.0.20.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.20.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: A_DB_1
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: avd
+        - name: db
+        vid: 20
+    tags:
+    - name: avd
+    vrf_vni: '11'
+  - _custom_field_data:
+      ospf_enabled: true
+    ip_addresses:
+    - address: 10.0.30.1/24
+      interface: null
+      role: ANYCAST
+    - address: 10.0.56.1/24
+      interface: null
+      role: VIP
+    - address: 10.0.56.2/24
+      interface:
+        device:
+          name: dc1-borderleaf1a
+      role: SECONDARY
+    - address: 10.0.56.3/24
+      interface:
+        device:
+          name: dc1-borderleaf1b
+      role: SECONDARY
+    - address: 10.0.57.1/24
+      interface:
+        device:
+          name: dc1-borderleaf1a
+      role: SECONDARY
+    - address: 10.0.57.2/24
+      interface:
+        device:
+          name: dc1-borderleaf1b
+      role: SECONDARY
+    name: A_WEB
+    svis:
+    - ip_addresses:
+      - address: 10.0.30.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.30.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: A_WEB_1
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: avd
+        - name: web
+        vid: 30
+    - ip_addresses:
+      - address: 10.0.56.1/24
+        device: null
+        type: VIP
+      - address: 10.0.56.2/24
+        device: dc1-borderleaf1a
+        type: SECONDARY
+      - address: 10.0.56.3/24
+        device: dc1-borderleaf1b
+        type: SECONDARY
+      prefix: 10.0.56.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: true
+        name: peering_vlan
+        role:
+          name: peering
+        status:
+          name: Active
+        tags:
+        - name: avd
+        vid: 56
+    - ip_addresses:
+      - address: 10.0.57.1/24
+        device: dc1-borderleaf1a
+        type: SECONDARY
+      - address: 10.0.57.2/24
+        device: dc1-borderleaf1b
+        type: SECONDARY
+      prefix: 10.0.57.0/24
+      site: null
+      status:
+        name: Active
+      vlan: null
+    tags:
+    - name: avd
+    vrf_vni: '12'
+- l2vlans:
+  - name: TENANT_B_l2vlan_456
+    prefixes: []
+    site: null
+    status:
+      name: Active
+    tags:
+    - name: avd
+    vid: 456
+  mac_vrf_vni_base: 20000
+  name: TENANT_B
+  vrfs:
+  - _custom_field_data:
+      ospf_enabled: null
+    ip_addresses:
+    - address: 10.0.40.1/24
+      interface: null
+      role: ANYCAST
+    name: B_APP
+    svis:
+    - ip_addresses:
+      - address: 10.0.40.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.40.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: B_APP_1
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: app
+        - name: avd
+        vid: 40
+    tags:
+    - name: avd
+    vrf_vni: '20'
+  - _custom_field_data:
+      ospf_enabled: null
+    ip_addresses:
+    - address: 10.0.50.1/24
+      interface: null
+      role: ANYCAST
+    - address: 10.0.51.1/24
+      interface: null
+      role: ANYCAST
+    name: B_DB
+    svis:
+    - ip_addresses:
+      - address: 10.0.50.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.50.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: B_DB_1
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: avd
+        - name: db
+        vid: 50
+    - ip_addresses:
+      - address: 10.0.51.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.51.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: B_DB_2
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: avd
+        - name: db
+        vid: 51
+    tags:
+    - name: avd
+    vrf_vni: '21'
+  - _custom_field_data:
+      ospf_enabled: null
+    ip_addresses:
+    - address: 10.0.60.1/24
+      interface: null
+      role: ANYCAST
+    - address: 10.0.61.1/24
+      interface: null
+      role: ANYCAST
+    name: B_WEB
+    svis:
+    - ip_addresses:
+      - address: 10.0.60.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.60.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: B_WEB_1
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: avd
+        - name: web
+        vid: 60
+    - ip_addresses:
+      - address: 10.0.61.1/24
+        device: null
+        type: ANYCAST
+      prefix: 10.0.61.0/24
+      site: null
+      status:
+        name: Active
+      vlan:
+        cf_ospf_enabled: null
+        name: B_WEB_2
+        role: null
+        status:
+          name: Active
+        tags:
+        - name: avd
+        - name: web
+        vid: 61
+    tags:
+    - name: avd
+    vrf_vni: '22'

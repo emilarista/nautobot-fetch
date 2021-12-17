@@ -1,6 +1,16 @@
 {% set services_data.tenants = nb_network_services.tenants %}
-{% set index = ansible_loop.index0 %}
+{# Have to glue devices to services_data to render tenant l3_interfaces #}
+{% set services_data.tenant_devices = [] %}
+{% for vchassis in nb_mlag_pairs.virtual_chassis %}
+{%     for device in vchassis.members %}
+{%         do services_data.tenant_devices.append(device) %}
+{%     endfor %}
+{% endfor %}
+{% for device in nb_standalone_leafs.devices %}
+{%     do services_data.tenant_devices.append(device) %}
+{% endfor %}
 {# Finding correct site so we can filter services correctly #}
+{% set index = ansible_loop.index0 %}
 {% for site in nb_sites.sites %}
 {%     if site.name == site_names[index] %}
 {%         set services_data.site_name = site.name %}

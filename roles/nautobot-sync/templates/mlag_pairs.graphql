@@ -1,42 +1,62 @@
-query{
-  virtual_chassis(tag: "avd") {
+{
+  devices(cf_evpn_role: "client", tag: "avd", virtual_chassis_member: false) {
     name
-    cf_bgp_asn
-    cf_evpn_role
-    members {
+    status {
       name
-      status {
+    }
+    device_type {
+      model
+    }
+    device_role {
+      name
+    }
+    tags {
+      name
+    }
+    primary_ip4 {
+      address
+    }
+    cf_device_id
+    cf_evpn_role
+    cf_bgp_asn
+    site {
+      name
+    }
+    interfaces {
+      name
+      description
+      member_interfaces {
         name
+        device {
+          name
+        }
       }
-      device_type {
-        model
+      untagged_vlan {
+        vid
       }
-      device_role {
+      tagged_vlans {
+        vid
+      }
+      cf_raw_eos_cli
+      mode
+      mtu
+      type
+      enabled
+      ip_addresses {
+        address
+        vrf {
+          name
+        }
+      }
+      connected_interface {
+        device {
+          name
+          cf_bgp_asn
+        }
         name
       }
       tags {
-        name
-      }
-      primary_ip4 {
-        address
-      }
-      cf_device_id
-      cf_evpn_role
-      cf_bgp_asn
-      site {
-        name
-      }
-      interfaces {
-        name
-        connected_interface {
-          device {
-            name
-          }
-          name
-        }
-        tags {
-          slug
-        }
+        slug
       }
     }
   }

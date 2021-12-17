@@ -2,34 +2,91 @@ tenants:
 {% for tenant in services_data.tenants | emil.nbavd.structure_tenants %}
   {{ tenant.name }}:
     mac_vrf_vni_base: {{ tenant.mac_vrf_vni_base }}
+{#  Building l2vlans #}
     l2vlans:
 {%     for l2vlan in tenant.l2vlans %}
-{%         if (l2vlan.site == services_data.site_name or l2vlan.site == none) and l2vlan.status.name == "Active" %}
+{%         if ((l2vlan.site.name is defined and (l2vlan.site.name == services_data.site_name or l2vlan.site.name == "Global")) or l2vlan.site == none) and l2vlan.status.name == "Active" %}
       {{ l2vlan.vid }}:
         name: {{ l2vlan.name }}
 {%             set service_tags = [] %}
 {%             for tag in l2vlan.tags %}
-{%                 if tag.name | lower != "avd" %}
-{%                     do service_tags.append(tag.name) %}
-{%                 endif %}
+{%                 do service_tags.append(tag.name) %}
 {%             endfor %}
         tags: {{ service_tags }}
 {%         endif %}
 {%     endfor %}
+{#  Building vrfs #}
     vrfs:
 {%     for vrf in tenant.vrfs %}
       {{ vrf.name }}:
         vrf_vni: {{ vrf.vrf_vni }}
+{#      Building vrf ospf #}
+{%         if vrf._custom_field_data.ospf_enabled is defined and vrf._custom_field_data.ospf_enabled == true %}
+        ospf:
+          enabled: true
+{%         endif %}
+{#      Building SVIs #}
         svis:
 {%         for svi in vrf.svis %}
-{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and (svi.site ==  services_data.site_name or svi.site == none) %}
+{%             set service_nodes = namespace(ips = []) %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.site.name is defined and (svi.site.name == services_data.site_name or svi.site.name == "Global")) or svi.site == none or svi.site == "Global") %}
           {{ svi.vlan.vid }}:
             enabled: true
             name: {{ svi.vlan.name }}
+{#          Building SVI IP-addressing #}
 {%                 for ip in svi.ip_addresses %}
-{%                     set service_nodes = namespace() %}
 {%                     if ip.type == "ANYCAST" %}
             ip_address_virtual: {{ ip.address }}
+{%                     elif ip.type == "VIP" %}
+            ip_virtual_router_address: {{ ip.address.split("/")[0] }}
+{%                     elif ip.type == "SECONDARY" %}
+{%                         do service_nodes.ips.append(ip) %}
+{%                     endif %}
+{%                 endfor %}
+{%                 if service_nodes.ips | length > 0 %}
+            nodes:
+{%                     for ip in service_nodes.ips %}
+              {{ ip.device }}:
+                ip_address: {{ ip.address }}
+{%                     endfor %}
+{%                 endif %}
+            tags:
+{%                 if svi.vlan.tags is defined and svi.vlan.tags is not none and svi.vlan.tags | length > 0 %}
+{%                     for tag in svi.vlan.tags %}
+              - {{ tag.name }}
+{%                     endfor %}
+{%                 else %}
+              - avd
+{%                 endif %}
+{#          Building SVI OSPF Settings #}
+{%                 if (svi.vlan.cf_ospf_enabled is defined and svi.vlan.cf_ospf_enabled == true) or (svi.cf_ospf_enabled is defined and svi.cf_ospf_enabled == true) %}
+            ospf:
+              enabled: true
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
+{#      Building vrf l3_interfaces #}
+        l3_interfaces:
+{%         for device in services_data.tenant_devices %}
+{%             if device.site.name == services_data.site_name %}
+{%                 for interface in device.interfaces %}
+{%                     if interface.ip_addresses is defined and interface.ip_addresses | length > 0 and "Ethernet" in interface.name %}
+{%                         for ip in interface.ip_addresses %}
+{%                             if ip.vrf is defined and ip.vrf is not none %}
+{%                                 if ip.vrf.name == vrf.name %}
+          - interfaces: [ {{ interface.name }} ]
+            ip_addresses: [ {{ ip.address }} ]
+            enabled: true
+            nodes: [ {{ device.name }} ]
+{%                                     if interface.description != "" %}
+            description: {{ interface.description }}
+{%                                     else %}
+            description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
+{%                                     endif %}
+{%                                 break %}
+{%                                 endif %}
+{%                             endif %}
+{%                         endfor %}
 {%                     endif %}
 {%                 endfor %}
 {%             endif %}
@@ -37,31 +94,4 @@ tenants:
 {%     endfor %}
 {% endfor %}
 
-{#
-vrfs:
-      TENANT_A_INSIDE:
-        vrf_vni: 10
-        bgp_peers:
-          10.0.255.4:
-            remote_as: 1234
-            description: Firewall
-            # password is DogeLet!
-            password: $1c$0gqqCt6BsFxvVktWYuvBGQ==
-            send_community: standard
-            maximum_routes: 10000
-            set_ipv4_next_hop: 10.0.255.1
-            nodes: [ dc1-borderleaf01a, dc1-borderleaf01b ]
-            local_as: 65000
-        svis:
-          10:
-            enabled: true
-            ip_address_virtual: 10.0.1.1/24
-            name: TENANT_A_INSIDE_L3_TEST_1
-            tags:
-            - fabricwide
-          20:
-            enabled: true
-            ip_address_virtual: 10.0.2.1/24
-            name: TENANT_A_INSIDE_L3_TEST_2
-            tags:
-            - fabricwide #}
+{{ services_data.tenants | to_nice_yaml(indent = 2) }}
