@@ -43,7 +43,7 @@ tenants:
 {%                         do service_nodes.ips.append(ip) %}
 {%                     endif %}
 {%                 endfor %}
-{%                 if service_nodes.ips | length > 0 %}
+{%                 if service_nodes.ips | length > 0 %}
             nodes:
 {%                     for ip in service_nodes.ips %}
               {{ ip.device }}:
@@ -81,7 +81,7 @@ tenants:
 {%                                     if interface.description != "" %}
             description: {{ interface.description }}
 {%                                     else %}
-            description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
+            description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
 {%                                     endif %}
 {%                                 break %}
 {%                                 endif %}
@@ -94,4 +94,4 @@ tenants:
 {%     endfor %}
 {% endfor %}
 
-{{ services_data.tenants | to_nice_yaml(indent = 2) }}
+{# {{ services_data.tenants | to_nice_yaml(indent = 2) }} #}

@@ -1,3 +1,164 @@
 ---
 
 servers:
+# Single Interface Connections
+  dc1-leaf01a_Ethernet6:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: access
+        raw_eos_cli: ''
+        switch_ports:
+        - Ethernet6
+        switches:
+        - dc1-leaf01a
+        vlans: '11'
+
+  dc1-leaf01a_Ethernet7:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: trunk
+        switch_ports:
+        - Ethernet7
+        switches:
+        - dc1-leaf01a
+        vlans: 10,11,20,30
+
+  A_ESXi01_Eth0:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: trunk
+        switch_ports:
+        - Ethernet8
+        switches:
+        - dc1-leaf01a
+
+  A_ESXi01_Eth1:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth1
+        mode: trunk
+        switch_ports:
+        - Ethernet8
+        switches:
+        - dc1-leaf01b
+
+  B_Router_01_Ethernet5:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Ethernet5
+        mode: trunk
+        native_vlan: '51'
+        raw_eos_cli: 'storm-control broadcast level 15
+
+          storm-control unknown-unicast level 15'
+        switch_ports:
+        - Ethernet7
+        switches:
+        - dc1-leaf02a
+        vlans: 40,60
+
+  dc1-leaf03_Ethernet6:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: access
+        raw_eos_cli: 'storm-control broadcast level 10
+
+          storm-control unknown-unicast level 10'
+        switch_ports:
+        - Ethernet6
+        switches:
+        - dc1-leaf03
+        vlans: '40'
+
+  dc1-leaf03_Ethernet7:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: trunk
+        native_vlan: '10'
+        raw_eos_cli: 'storm-control broadcast level 15
+
+          storm-control unknown-unicast level 15'
+        switch_ports:
+        - Ethernet7
+        switches:
+        - dc1-leaf03
+
+
+# Non-MLAG Port-Channel Connections
+  dc1-leaf03_Port-Channel3:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        - Eth1
+        mode: trunk
+        native_vlan: '11'
+        port_channel:
+          mode: active
+          raw_eos_cli: 'switchport vlan translation 50 60
+
+            storm-control broadcast level 10
+
+            storm-control unknown-unicast level 10'
+        switch_ports:
+        - Ethernet3
+        - Ethernet4
+        switches:
+        - dc1-leaf03
+        - dc1-leaf03
+        vlans: 11,30,40
+
+
+# MLAG Connections
+  dc1-borderleaf1a_mlag8:
+    rack:
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        - Eth1
+        mode: trunk
+        native_vlan: '30'
+        port_channel:
+          mode: active
+          raw_eos_cli: 'switchport vlan translation 50 60
+
+            storm-control broadcast level 10
+
+            storm-control unknown-unicast level 10'
+        switch_ports:
+        - Ethernet8
+        - Ethernet8
+        switches:
+        - dc1-borderleaf1a
+        - dc1-borderleaf1b
+        vlans: 10,11
+
+  dc1-leaf02a_mlag5:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        - Eth1
+        mode: trunk
+        port_channel:
+          mode: active
+          raw_eos_cli: ''
+        switch_ports:
+        - Ethernet5
+        - Ethernet5
+        switches:
+        - dc1-leaf02a
+        - dc1-leaf02b
+

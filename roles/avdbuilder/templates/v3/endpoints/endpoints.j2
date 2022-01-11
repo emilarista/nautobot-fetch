@@ -1,12 +1,7 @@
 {# {{ endpoints_data.endpoint_devices | to_nice_yaml(indent=2) }} #}
 servers:
-{% for device in endpoints_data.endpoint_devices %}
-{%     for interface in device.interfaces %}
-{# Render non-mlag first, connection name should be description or connected device name  #}
-{%         if "Ethernet" in interface.name and interface.parent_lag == none %}
-{%             if interface.connected_interface%}
-{%         endif %}
-{# render mlag first, just check that parent_lag == none for other interfaces before render. #}
-{%         if %}
-{%     endfor %}
-{% endfor %}
+{% include "interfaces.j2" %}
+
+{% include "port-channels.j2" %}
+
+{% include "mlag.j2" %}

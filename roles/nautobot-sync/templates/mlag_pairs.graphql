@@ -17,6 +17,9 @@
       tags {
         name
       }
+      rack {
+        name
+      }
       primary_ip4 {
         address
       }
@@ -43,6 +46,9 @@
         }
         cf_raw_eos_cli
         mode
+        lag {
+          name
+        }
         mtu
         type
         enabled
