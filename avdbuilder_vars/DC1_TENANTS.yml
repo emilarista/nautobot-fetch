@@ -18,6 +18,9 @@ tenants:
             tags:
               - app
               - avd
+            ip_helpers:
+              1.1.1.1:
+              2.2.2.2:
           11:
             enabled: true
             name: A_APP_2

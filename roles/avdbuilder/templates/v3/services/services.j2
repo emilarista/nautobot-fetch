@@ -65,7 +65,7 @@ tenants:
 {%                 endif %}
 {%                 if svi.vlan.cf_ip_helpers is defined and svi.vlan.cf_ip_helpers is not none %}
             ip_helpers:
-{%                     for ip_helper in svi.vlan.cf_ip_helpers | split(",") %}
+{%                     for ip_helper in svi.vlan.cf_ip_helpers.split(",") %}
               {{ ip_helper }}:
 {%                     endfor %}
 {%                 endif %}

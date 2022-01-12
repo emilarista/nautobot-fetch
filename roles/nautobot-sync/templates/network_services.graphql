@@ -29,6 +29,8 @@
         role
         address
         interface {
+          cf_raw_eos_cli
+          cf_ospf_enabled
           device {
             name
           }
