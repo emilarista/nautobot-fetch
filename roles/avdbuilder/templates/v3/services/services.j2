@@ -21,7 +21,7 @@ tenants:
       {{ vrf.name }}:
         vrf_vni: {{ vrf.vrf_vni }}
 {#      Building vrf ospf #}
-{%         if vrf._custom_field_data.ospf_enabled is defined and vrf._custom_field_data.ospf_enabled == true %}
+{%         if vrf.cf_ospf_enabled is defined and vrf.cf_ospf_enabled == true %}
         ospf:
           enabled: true
 {%         endif %}
@@ -63,6 +63,12 @@ tenants:
             ospf:
               enabled: true
 {%                 endif %}
+{%                 if svi.vlan.cf_ip_helpers is defined and svi.vlan.cf_ip_helpers is not none %}
+            ip_helpers:
+{%                     for ip_helper in svi.vlan.cf_ip_helpers | split(",") %}
+              {{ ip_helper }}:
+{%                     endfor %}
+{%                 endif %}
 {%             endif %}
 {%         endfor %}
 {#      Building vrf l3_interfaces #}
@@ -82,6 +88,10 @@ tenants:
             description: {{ interface.description }}
 {%                                     else %}
             description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
+{%                                     endif %}
+{%                                     if interface.cf_ospf_enabled is defined and interface.cf_ospf_enabled == true %}
+            ospf:
+              enabled: true
 {%                                     endif %}
 {%                                 break %}
 {%                                 endif %}

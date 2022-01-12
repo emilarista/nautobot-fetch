@@ -34,7 +34,7 @@
           }
         }
       }
-      _custom_field_data
+      cf_ospf_enabled
       name
       tags {
         name
@@ -50,6 +50,7 @@
         prefix
         vlan {
           cf_ospf_enabled
+          cf_ip_helpers
           name
           vid
           status {

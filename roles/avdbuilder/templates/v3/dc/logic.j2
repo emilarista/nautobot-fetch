@@ -54,11 +54,3 @@
 {%     set leaf_ul_switch_interfaces = dc_data.l3leaf_node_groups[leaf.name].nodes[leaf.name].uplink_switch_interfaces | default([]) %}
 {%     do leaf.update({"uplink_switch_interfaces": leaf_ul_switch_interfaces}) %}
 {% endfor %}
-{# {{ dc_data.l3leaf_mlag_pairs }} #}
-{# Standalone leafs need node-groups too #}
-{# {% for dc_device in dc_data.devices %}
-{%     if dc_device.virtual_chassis == none and dc_device.device_role.slug == "l3leaf" %}
-{%         set l3leaf_node_group = {"custom_fields": dc_device.custom_fields, "display": dc_device.display, "domain": dc_device.display, "id": dc_device.id, "master": none, "member_count": 1, "name": dc_device.name, "tags": dc_device.tags, "nodes": [dc_device]} %}
-{%         do dc_data.l3leaf_node_groups.append(l3leaf_node_group) %}
-{%     endif %}
-{% endfor %} #}
