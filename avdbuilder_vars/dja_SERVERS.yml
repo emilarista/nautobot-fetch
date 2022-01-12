@@ -59,3 +59,20 @@ servers:
         - dja-border-01b
         vlans: 6,16
 
+  dja-border-01a_mlag44:
+    rack: dja-rack1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        - Eth1
+        mode: access
+        port_channel:
+          mode: active
+        switch_ports:
+        - Ethernet44
+        - Ethernet44
+        switches:
+        - dja-border-01a
+        - dja-border-01b
+        vlans: '1234'
+

@@ -35,6 +35,10 @@
           description
           device {
             name
+            cf_bgp_asn
+            device_role {
+              name
+            }
           }
         }
       }

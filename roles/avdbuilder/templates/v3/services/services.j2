@@ -71,6 +71,16 @@ tenants:
 {%                 endif %}
 {%             endif %}
 {%         endfor %}
+{#      Building vrf bgp_peers #}
+{%         for ip_address in vrf.ip_addresses %}
+{%             if ip_address.interface is defined and ip_address.interface is not none %}
+{%                 if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                     if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
+{# need to add data model for this #}
+{%                     endif %}
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
 {#      Building vrf l3_interfaces #}
         l3_interfaces:
 {%         for ip_address in vrf.ip_addresses %}
@@ -79,7 +89,8 @@ tenants:
 {%                     if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
 {%                         set render_interface = namespace(render = false) %}
 {%                         for device in services_data.tenant_devices %}
-{%                             if device.name == ip_address.interface.device.name %}
+{#                             Testing for l3leaf is important to distinguish this from an external routing device #}
+{%                             if device.name == ip_address.interface.device.name and device.device_role == "l3leaf" %}
 {%                                 if device.site.name == services_data.site_name %}
 {%                                     set render_interface.render = true %}
 {%                                     break %}
@@ -110,3 +121,29 @@ tenants:
 
 {# {{ services_data.tenants | to_nice_yaml(indent = 2) }} #}
 {# {{ services_data.tenant_devices | to_nice_yaml(indent = 2) }} #}
+
+{#
+    vrfs {
+      ip_addresses {
+        role
+        address
+        interface {
+          cf_raw_eos_cli
+          cf_ospf_enabled
+          name
+          description
+          device {
+            name
+            interfaces {
+              name
+              tags {
+                name
+              }
+              ip_addresses {
+                address
+              }
+            }
+            device_role {
+              name
+            }
+#}

@@ -10,6 +10,17 @@ tenants:
         ospf:
           enabled: true
         svis:
+          1234:
+            enabled: true
+            name: dja_bgp_peering_vlan
+            ip_virtual_router_address: 10.123.123.1
+            nodes:
+              dja-border-01a:
+                ip_address: 10.123.123.2/27
+              dja-border-01b:
+                ip_address: 10.123.123.3/27
+            tags:
+              - AVD
           97:
             enabled: true
             name: vl-Bolag1-97
@@ -92,4 +103,3 @@ tenants:
             tags:
               - AVD
         l3_interfaces:
-
