@@ -31,6 +31,8 @@
         interface {
           cf_raw_eos_cli
           cf_ospf_enabled
+          name
+          description
           device {
             name
           }

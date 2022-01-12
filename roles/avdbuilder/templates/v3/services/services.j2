@@ -73,35 +73,40 @@ tenants:
 {%         endfor %}
 {#      Building vrf l3_interfaces #}
         l3_interfaces:
-{%         for device in services_data.tenant_devices %}
-{%             if device.site.name == services_data.site_name %}
-{%                 for interface in device.interfaces %}
-{%                     if interface.ip_addresses is defined and interface.ip_addresses | length > 0 and "Ethernet" in interface.name %}
-{%                         for ip in interface.ip_addresses %}
-{%                             if ip.vrf is defined and ip.vrf is not none %}
-{%                                 if ip.vrf.name == vrf.name %}
-          - interfaces: [ {{ interface.name }} ]
-            ip_addresses: [ {{ ip.address }} ]
-            enabled: true
-            nodes: [ {{ device.name }} ]
-{%                                     if interface.description != "" %}
-            description: {{ interface.description }}
-{%                                     else %}
-            description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
-{%                                     endif %}
-{%                                     if interface.cf_ospf_enabled is defined and interface.cf_ospf_enabled == true %}
-            ospf:
-              enabled: true
-{%                                     endif %}
-{%                                 break %}
+{%         for ip_address in vrf.ip_addresses %}
+{%             if ip_address.interface is defined and ip_address.interface is not none %}
+{%                 if "Ethernet" in ip_address.interface.name %}
+{%                     if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                         set render_interface = namespace(render = false) %}
+{%                         for device in services_data.tenant_devices %}
+{%                             if device.name == ip_address.interface.device.name %}
+{%                                 if device.site.name == services_data.site_name %}
+{%                                     set render_interface.render = true %}
+{%                                     break %}
 {%                                 endif %}
 {%                             endif %}
 {%                         endfor %}
+{%                         if render_interface.render == true %}
+          - interfaces: [ {{ ip_address.interface.name }} ]
+            ip_addresses: [ {{ ip_address.address }} ]
+            enabled: true
+            nodes: [ {{ ip_address.interface.device.name }} ]
+{%                             if ip_address.interface.description != "" %}
+            description: {{ ip_address.interface.description }}
+{%                             else %}
+            description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
+{%                             endif %}
+{%                             if ip_address.interface.cf_ospf_enabled is defined and ip_address.interface.cf_ospf_enabled == true %}
+            ospf:
+              enabled: true
+{%                             endif %}
+{%                         endif %}
 {%                     endif %}
-{%                 endfor %}
+{%                 endif %}
 {%             endif %}
 {%         endfor %}
 {%     endfor %}
 {% endfor %}
 
 {# {{ services_data.tenants | to_nice_yaml(indent = 2) }} #}
+{# {{ services_data.tenant_devices | to_nice_yaml(indent = 2) }} #}
