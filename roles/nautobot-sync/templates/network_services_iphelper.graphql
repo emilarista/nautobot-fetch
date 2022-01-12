@@ -54,6 +54,7 @@
         prefix
         vlan {
           cf_ospf_enabled
+          cf_ip_helpers
           name
           vid
           status {

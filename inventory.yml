@@ -6,5 +6,8 @@ all:
         nautobot:
           ansible_host: 10.41.41.10
           api_token: ff0fa3e62e02faa83c0dbd36a3395cc688c84051
+        advania_nautobot:
+          api_token: fae2394829eece3a988f0b52ab313aced28c8e29
+          ansible_host: 10.254.20.17
     CVP:
       hosts:

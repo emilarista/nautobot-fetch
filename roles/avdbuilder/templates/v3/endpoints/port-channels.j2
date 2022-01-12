@@ -48,7 +48,7 @@
 {%                 endif %}
 {%             endif %}
 {#             EOS_CLI #}
-{%             if interface.cf_raw_eos_cli is not none %}
+{%             if interface.cf_raw_eos_cli != "" %}
 {%                 set eos_cli = interface.cf_raw_eos_cli.split(",") | join("\n") %}
 {%                 do connection_data.adapter.port_channel.update({"raw_eos_cli": eos_cli})%}
 {%             endif %}

@@ -1,0 +1,95 @@
+---
+
+tenants:
+  Bolag1:
+    mac_vrf_vni_base: 670171
+    l2vlans:
+    vrfs:
+      Bolag1:
+        vrf_vni: 95
+        ospf:
+          enabled: true
+        svis:
+          97:
+            enabled: true
+            name: vl-Bolag1-97
+            ip_address_virtual: 100.64.0.1/32
+            ip_address_virtual: 100.64.0.2/32
+            tags:
+              - AVD
+          96:
+            enabled: true
+            name: vl-Bolag1-96
+            ip_address_virtual: 172.0.0.1/32
+            tags:
+              - AVD
+            ospf:
+              enabled: true
+        l3_interfaces:
+  Bolag2:
+    mac_vrf_vni_base: 650171
+    l2vlans:
+    vrfs:
+      Bolag2:
+        vrf_vni: 98
+        svis:
+          100:
+            enabled: true
+            name: vl-Bolag2-100
+            ip_address_virtual: 100.64.0.1/32
+            tags:
+              - AVD
+          99:
+            enabled: true
+            name: vl-Bolag2-99
+            ip_address_virtual: 172.0.0.1/32
+            tags:
+              - AVD
+        l3_interfaces:
+  Bolag3:
+    mac_vrf_vni_base: 680171
+    l2vlans:
+    vrfs:
+      Bolag3:
+        vrf_vni: 101
+        svis:
+          103:
+            enabled: true
+            name: vl-Bolag3-103
+            ip_address_virtual: 100.64.0.1/32
+            nodes:
+              dja-border-01b:
+                ip_address: 100.64.0.3/32
+            tags:
+              - AVD
+          102:
+            enabled: true
+            name: vl-Bolag3-102
+            ip_address_virtual: 172.0.0.1/32
+            tags:
+              - AVD
+        l3_interfaces:
+  Test:
+    mac_vrf_vni_base: 10000
+    l2vlans:
+    vrfs:
+      Test:
+        vrf_vni: 114
+        svis:
+          116:
+            enabled: true
+            name: vl-Test-116
+            ip_address_virtual: 100.64.0.1/32
+            nodes:
+              dja-border-01a:
+                ip_address: 100.64.0.2/32
+            tags:
+              - AVD
+          115:
+            enabled: true
+            name: vl-Test-115
+            ip_address_virtual: 172.0.0.1/32
+            tags:
+              - AVD
+        l3_interfaces:
+
