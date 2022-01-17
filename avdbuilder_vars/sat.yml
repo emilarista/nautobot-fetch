@@ -2,8 +2,11 @@
 
 
 dc_name: sat
+
+mgmt_gateway: 172.17.192.1
+
 spine:
-  defaults: {'bgp_defaults': ['no bgp default ipv4-unicast', 'distance bgp 20 200 200', 'graceful-restart restart-time 300', 'graceful-restart', 'bgp asn notation asdot'], 'raw_eos_cli': 'management security\n  password encryption-key common\n'}
+  defaults: {'loopback_ipv4_pool': '100.64.21.0/24', 'bgp_as': '64515', 'bgp_defaults': ['no bgp default ipv4-unicast', 'distance bgp 20 200 200', 'graceful-restart restart-time 300', 'graceful-restart', 'bgp asn notation asdot'], 'raw_eos_cli': 'management security\n  password encryption-key common\n'}
   nodes:
     sat-spine-01:
       evpn_role: none
@@ -20,7 +23,7 @@ l3leaf:
   node_groups:
     sat-border:
       filter: {'tenants': ['all'], 'tags': ['all']}
-      bgp_asn: 64704
+      bgp_as: 64704
       evpn_role: server
       evpn_route_servers: ['dja-border-01a', 'dja-border-01b']
       nodes:
@@ -36,7 +39,7 @@ l3leaf:
           uplink_switch_interfaces: ['Ethernet2/1', 'Ethernet2/1']
     sat-leaf:
       filter: {'tenants': ['all'], 'tags': ['all']}
-      bgp_asn: 64604
+      bgp_as: 64604
       evpn_role: client
       evpn_route_servers: ['sat-border-01a', 'sat-border-01b']
       nodes:
@@ -51,4 +54,3 @@ l3leaf:
           uplink_switches:
           uplink_switch_interfaces: ['Ethernet4/1', 'Ethernet4/1']
 
-  

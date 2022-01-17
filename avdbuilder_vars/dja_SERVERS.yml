@@ -2,42 +2,6 @@
 
 servers:
 # Single Interface Connections
-  dja-border-01a_Ethernet49/1:
-    rack: dja-rack1
-    adapters:
-      - endpoint_ports:
-        - Eth0
-        mode: trunk
-        native_vlan: '4'
-        switch_ports:
-        - Ethernet49/1
-        switches:
-        - dja-border-01a
-
-  dja-fw-01a_eth5:
-    rack: dja-rack2
-    adapters:
-      - endpoint_ports:
-        - eth5
-        mode: trunk
-        switch_ports:
-        - Ethernet1
-        switches:
-        - dja-border-01b
-        vlans: 6,9,12,16,19,22,25,28,32,36,39,49,52,55,58,61,64,71,75,78,81,84,97,100,103,116
-
-  dja-esxi-01_eth0:
-    rack: dja-rack1
-    adapters:
-      - endpoint_ports:
-        - eth0
-        mode: trunk
-        switch_ports:
-        - Ethernet1
-        switches:
-        - dja-leaf-01a
-        vlans: 5,8,11,15,18,21,24,27,31,35,38,48,51,54,57,60,63,70,74,77,80,83,90,93,96,99,102,109,115
-
 
 # Non-MLAG Port-Channel Connections
 
@@ -57,22 +21,22 @@ servers:
         switches:
         - dja-border-01a
         - dja-border-01b
-        vlans: 6,16
+        vlans: '4'
 
-  dja-border-01a_mlag44:
+  dja-leaf-01a_mlag2:
     rack: dja-rack1
     adapters:
       - endpoint_ports:
         - Eth0
         - Eth1
-        mode: access
+        mode: trunk
         port_channel:
           mode: active
         switch_ports:
-        - Ethernet44
-        - Ethernet44
+        - Ethernet2
+        - Ethernet2
         switches:
-        - dja-border-01a
-        - dja-border-01b
-        vlans: '1234'
+        - dja-leaf-01a
+        - dja-leaf-01b
+        vlans: '3'
 
