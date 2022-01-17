@@ -13,7 +13,9 @@ l3leaf:
         {{ node.name }}:
           id: {{ node.cf_device_id }}
           mgmt_ip: {{ node.primary_ip4.address }}
-          uplink_switches:
+{%            if node.uplink_switches is defined and node.uplink_switches is not none %}
+          uplink_switches: {{ node.uplink_switches }}
+{%            endif %}
           uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
 {%        endfor %}
 {%     endif %}
@@ -29,7 +31,9 @@ l3leaf:
         {{ leaf.name }}:
           id: {{ leaf.cf_device_id }}
           mgmt_ip: {{ leaf.primary_ip4.address }}
-          uplink_switches:
+{%         if leaf.uplink_switches is defined and leaf.uplink_switches is not none %}
+          uplink_switches: {{ leaf.uplink_switches }}
+{%         endif %}
           uplink_switch_interfaces: {{ leaf.uplink_switch_interfaces }}
 {%     endif %}
 {% endfor %}

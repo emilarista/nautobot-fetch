@@ -36,8 +36,10 @@
 {% for mlag_pair in dc_data.l3leaf_mlag_pairs %}
 {%     for device in mlag_pair.members %}
 {%         do mlag_pair.update({"site": {"name": device.site.name}}) %}
-{%             set device_ul_switch_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
+{%             set device_ul_switch_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
+{%             set device_ul_switches = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switches | default([]) %}
 {%             do device.update({"uplink_switch_interfaces": device_ul_switch_interfaces}) %}
+{%             do device.update({"uplink_switches": device_ul_switches} )%}
 {# need to build uplink_switch_interfaces for l3leaf defaults, set thelist = [] for item in uplink_switches thelist.append("Ethernet"~"id"/1) #}
 {%     endfor %}
 {%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ "all" ]}}) %}
@@ -51,6 +53,8 @@
 {% for leaf in dc_data.standalone_leafs %}
 {%     do leaf.update({"filter": {"tenants": [ "all" ], "tags": [ "all" ]}}) %}
 {%     do leaf.update({"evpn_route_servers": dc_data.l3leaf_route_servers}) %}
-{%     set leaf_ul_switch_interfaces = dc_data.l3leaf_node_groups[leaf.name].nodes[leaf.name].uplink_switch_interfaces | default([]) %}
+{%     set leaf_ul_switch_interfaces = dc_data.l3leaf_node_groups[leaf.name].nodes[leaf.name].uplink_switch_interfaces | default([]) %}
+{%     set leaf_ul_switches = dc_data.l3leaf_node_groups[leaf.name].nodes[leaf.name].uplink_switches | default([]) %}
 {%     do leaf.update({"uplink_switch_interfaces": leaf_ul_switch_interfaces}) %}
+{%     do leaf.update({"uplink_switches": leaf_ul_switches} ) %}
 {% endfor %}
