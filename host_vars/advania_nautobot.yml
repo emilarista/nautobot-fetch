@@ -34,7 +34,7 @@ avd_fabric_defaults:
       # sat-border to thu-border
       - nodes: [ sat-border-01a, thu-border-01a ]
         id: 1
-        interfaces: [ ethernet10, ethernet10 ]
+        interfaces: [ Ethernet10, Ethernet10 ]
         as: [ 64704, 64700 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -42,7 +42,7 @@ avd_fabric_defaults:
       # sat-border to thu-border
       - nodes: [ sat-border-01b, thu-border-01b ]
         id: 2
-        interfaces: [ ethernet10, ethernet10 ]
+        interfaces: [ Ethernet10, Ethernet10 ]
         as: [ 64704, 64700 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -50,7 +50,7 @@ avd_fabric_defaults:
       # sat-border to dja-border
       - nodes: [ sat-border-01b, dja-border-01a ]
         id: 3
-        interfaces: [ ethernet3, ethernet3 ]
+        interfaces: [ Ethernet3, Ethernet3 ]
         as: [ 64704, 64701 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -58,7 +58,7 @@ avd_fabric_defaults:
       # sat-border to ste-border
       - nodes: [ sat-border-01a, ste-border-01a ]
         id: 4
-        interfaces: [ ethernet3, ethernet3 ]
+        interfaces: [ Ethernet3, Ethernet3 ]
         as: [ 64704, 64702 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -66,7 +66,7 @@ avd_fabric_defaults:
       # ste-border to thu-border
       - nodes: [ ste-border-01b, thu-border-01a ]
         id: 5
-        interfaces: [ ethernet3, ethernet3 ]
+        interfaces: [ Ethernet3, Ethernet3 ]
         as: [ 64702, 64700 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -74,7 +74,7 @@ avd_fabric_defaults:
       # thu-border to kro-border
       - nodes: [ thu-border-01b, kro-border-01a ]
         id: 6
-        interfaces: [ ethernet3, ethernet3 ]
+        interfaces: [ Ethernet3, Ethernet3 ]
         as: [ 64700, 64703 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -82,7 +82,7 @@ avd_fabric_defaults:
       # kro-border to dja-border
       - nodes: [ kro-border-01a, dja-border-01a ]
         id: 7
-        interfaces: [ ethernet10, ethernet10 ]
+        interfaces: [ Ethernet10, Ethernet10 ]
         as: [ 64703, 64701 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
@@ -90,7 +90,7 @@ avd_fabric_defaults:
       # kro-border to dja-border
       - nodes: [ kro-border-01b, dja-border-01b ]
         id: 8
-        interfaces: [ ethernet10, ethernet10 ]
+        interfaces: [ Ethernet10, Ethernet10 ]
         as: [ 64703, 64701 ]
         ip_pool: borderleaf_dci_pool
         bfd: false
