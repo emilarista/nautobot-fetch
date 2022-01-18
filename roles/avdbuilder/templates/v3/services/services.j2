@@ -19,7 +19,7 @@ tenants:
     vrfs:
 {%     for vrf in tenant.vrfs %}
       {{ vrf.name }}:
-        vrf_vni: {{ vrf.vrf_vni }}
+        vrf_id: {{ vrf.vrf_vni }}
 {#      Building vrf ospf #}
 {%         if vrf.cf_ospf_enabled is defined and vrf.cf_ospf_enabled == true %}
         ospf:
