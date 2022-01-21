@@ -90,6 +90,10 @@ tenants:
 {%                             endif %}
 {# Implement logic to loop through svis and find the virtual router address to set the nexthop #}
 {# test: {{ ["192.168.0.7/24"] | ipaddr("host/prefix") | ipaddr("subnet") | ipaddr("1") }} #}
+{# implement local_as knob. #}
+{%                             if services_data.fabric_local_as is defined and services_data.fabric_local_as is not none %}
+            local_as: {{ services_data.fabric_local_as }}
+{%                             endif %}
 {%                             set peer_subnet = [ip_address.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
 {%                             for svi in vrf.svis %}
 {%                                 if svi.ip_addresses | length > 0 %}
@@ -140,6 +144,19 @@ tenants:
 {%                             endif %}
 {%                         endif %}
 {%                     endif %}
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
+{# Static routes, since my graphql query returns prefixes as svis, i have to use that... #}
+{%         set prefixes = vrf.svis %}
+        static_routes:
+{%         for prefix in prefixes %}
+{# test: {{ "2asd" | ipaddr }} #}
+{%             if (prefix.role.name is defined and prefix.role.name == "static_route") and (prefix.cf_next_hop is defined and prefix.cf_next_hop | ipaddr) %}
+          - destination_address_prefix: {{ prefix.prefix }}
+            gateway: {{ prefix.cf_next_hop }}
+{%                 if prefix.description != "" %}
+            name: {{ prefix.description }}
 {%                 endif %}
 {%             endif %}
 {%         endfor %}

@@ -56,6 +56,11 @@
           name
         }
         prefix
+        cf_next_hop
+        description
+        role {
+          name
+        }
         vlan {
           cf_ospf_enabled
           cf_ip_helpers

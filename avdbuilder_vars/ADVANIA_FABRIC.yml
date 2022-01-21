@@ -25,6 +25,7 @@ evpn_rd_type:
   admin_subfield: overlay_loopback
 evpn_rt_type:
   admin_subfield: 65000
+fabric_local_as: 150
 fabric_name: ADVANIA_FABRIC
 l3_edge:
   p2p_links:

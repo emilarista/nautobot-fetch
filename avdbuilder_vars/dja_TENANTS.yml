@@ -43,7 +43,12 @@ tenants:
             remote_as: 1234
             description: dja-ext_router-01
             nodes: ['dja-border-01a', 'dja-border-01b']
+            local_as: 150
             set_ipv4_next_hop: 10.123.234.1
         l3_interfaces:
+        static_routes:
+          - destination_address_prefix: 80.80.80.0/24
+            gateway: 1.2.3.4
+            name: Static Route Prefix
 
 
