@@ -98,6 +98,7 @@ avd_fabric_defaults:
 
 # Name must match site name in nautobot
 dja:
+  default_peering_devices: ["dja-border-01a", "dja-border-01b"]
   dc_defaults:
     mgmt_gateway: 172.17.192.1
     cvp_instance_ip: 172.17.190.17

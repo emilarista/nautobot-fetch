@@ -29,7 +29,7 @@ tenants:
         svis:
 {%         for svi in vrf.svis %}
 {%             set service_nodes = namespace(ips = []) %}
-{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.site.name is defined and (svi.site.name == services_data.site_name or svi.site.name == "Global")) or svi.site == none or svi.site == "Global") %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
           {{ svi.vlan.vid }}:
             enabled: true
             name: {{ svi.vlan.name }}
@@ -66,17 +66,44 @@ tenants:
 {%                 if svi.vlan.cf_ip_helpers is defined and svi.vlan.cf_ip_helpers is not none %}
             ip_helpers:
 {%                     for ip_helper in svi.vlan.cf_ip_helpers.split(",") %}
+{%                         if ip_helper != "" and ip_helper | ipaddr %}
               {{ ip_helper }}:
+{%                         endif %}
 {%                     endfor %}
 {%                 endif %}
 {%             endif %}
 {%         endfor %}
 {#      Building vrf bgp_peers #}
+        bgp_peers:
 {%         for ip_address in vrf.ip_addresses %}
 {%             if ip_address.interface is defined and ip_address.interface is not none %}
 {%                 if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
 {%                     if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
+{%                         if (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == services_data.site_name) or (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == "Global") or (ip_address.interface.device.site.name == none) %}
+{%                             set peer_ip = ip_address.address.split("/")[0] %}
 {# need to add data model for this #}
+          {{ peer_ip }}:
+            remote_as: {{ ip_address.interface.device.cf_bgp_asn }}
+            description: {{ ip_address.interface.device.name }}
+{%                             if services_data.default_peering_devices is defined and services_data.default_peering_devices | length > 0 %}
+            nodes: {{ services_data.default_peering_devices }}
+{%                             endif %}
+{# Implement logic to loop through svis and find the virtual router address to set the nexthop #}
+{# test: {{ ["192.168.0.7/24"] | ipaddr("host/prefix") | ipaddr("subnet") | ipaddr("1") }} #}
+{%                             set peer_subnet = [ip_address.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
+{%                             for svi in vrf.svis %}
+{%                                 if svi.ip_addresses | length > 0 %}
+{%                                     for ip in svi.ip_addresses %}
+{%                                         if ip.type == "VIP" %}
+{%                                             set svi_subnet = [ip.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
+{%                                             if peer_subnet == svi_subnet %}
+            set_ipv4_next_hop: {{ ip.address.split("/")[0] }}
+{%                                             endif  %}
+{%                                         endif %}
+{%                                     endfor %}
+{%                                 endif %}
+{%                             endfor %}
+{%                         endif %}
 {%                     endif %}
 {%                 endif %}
 {%             endif %}
@@ -123,7 +150,7 @@ tenants:
 {# {{ services_data.tenant_devices | to_nice_yaml(indent = 2) }} #}
 
 {#
-    vrfs {
+vrfs {
       ip_addresses {
         role
         address
@@ -134,16 +161,7 @@ tenants:
           description
           device {
             name
-            interfaces {
-              name
-              tags {
-                name
-              }
-              ip_addresses {
-                address
-              }
-            }
+            cf_bgp_asn
             device_role {
               name
-            }
 #}

@@ -1,3 +1,4 @@
+
 {% set services_data.tenants = nb_network_services.tenants %}
 {# Have to glue devices to services_data to render tenant l3_interfaces #}
 {% set services_data.tenant_devices = [] %}
@@ -17,3 +18,4 @@
 {%     endif %}
 {% endfor %}
 {# {{ services_data.tenants | emil.nbavd.structure_tenants | to_nice_yaml(indent=2) }} #}
+{% set services_data.default_peering_devices = hostvars[inventory_hostname][services_data.site_name].default_peering_devices %}

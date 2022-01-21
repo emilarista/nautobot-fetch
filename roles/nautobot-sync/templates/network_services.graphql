@@ -39,6 +39,9 @@
             device_role {
               name
             }
+            site {
+              name
+            }
           }
         }
       }
@@ -49,16 +52,17 @@
       }
       vrf_vni: rd
       svis: prefixes {
-        site {
-          name
-        }
         status {
           name
         }
         prefix
         vlan {
           cf_ospf_enabled
+          cf_ip_helpers
           name
+          site {
+            name
+          }
           vid
           status {
             name
