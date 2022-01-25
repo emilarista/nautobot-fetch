@@ -7,6 +7,8 @@
     mode: 0775
   delegate_to: localhost
   run_once: True
+  tags:
+    - always
 
 - name: "Create folder {{ output_dir }}"
   file:
@@ -15,6 +17,8 @@
     mode: 0775
   delegate_to: localhost
   run_once: True
+  tags:
+    - always
 
 - name: Generate fabric file
   connection: local
@@ -24,6 +28,8 @@
     mode: 0644
   delegate_to: localhost
   run_once: True
+  tags:
+    - always
 
 - name: Generate dc files
   connection: local
@@ -36,6 +42,8 @@
     extended: yes
   delegate_to: localhost
   run_once: True
+  tags:
+    - always
 
 - name: Generate servers files
   connection: local
@@ -48,6 +56,8 @@
     extended: yes
   delegate_to: localhost
   run_once: True
+  tags:
+    - always
 
 - name: Generate tenant services files
   connection: local
@@ -60,3 +70,5 @@
     extended: yes
   delegate_to: localhost
   run_once: True
+  tags:
+    - always

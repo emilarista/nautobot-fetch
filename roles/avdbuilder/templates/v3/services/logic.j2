@@ -20,3 +20,24 @@
 {# {{ services_data.tenants | emil.nbavd.structure_tenants | to_nice_yaml(indent=2) }} #}
 {% set services_data.default_peering_devices = hostvars[inventory_hostname][services_data.site_name].default_peering_devices %}
 {% set services_data.fabric_local_as = hostvars[inventory_hostname].avd_fabric_defaults.fabric_local_as | default(none) %}
+{# Handling routing policies #}
+{% set services_data.routing_policy = {
+    "route_maps": {},
+    "prefix_lists": {},
+    "ipv6_prefix_lists": {},
+    "community_lists": {},
+    "ip_extcommunity_lists": {},
+    "ip_extcommunity_lists_regexp": {}
+    } %}
+{% if nb_config_contexts is defined and nb_config_contexts is not none %}
+{%     for context in nb_config_contexts %}
+{%         if context.value.tenants | length > 0 and ("AVD" in context.value.tags or "avd" in context.value.tags) and "routing_policy" in context.value.tags %}
+{%             set data = context.value.data %}
+{%             for key, value in data.items() %}
+{%                 if key in services_data.routing_policy %}
+{%                     do services_data.routing_policy[key].update(value) %}
+{%                 endif %}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}

@@ -162,23 +162,5 @@ tenants:
 {%         endfor %}
 {%     endfor %}
 {% endfor %}
-
 {# {{ services_data.tenants | to_nice_yaml(indent = 2) }} #}
 {# {{ services_data.tenant_devices | to_nice_yaml(indent = 2) }} #}
-
-{#
-vrfs {
-      ip_addresses {
-        role
-        address
-        interface {
-          cf_raw_eos_cli
-          cf_ospf_enabled
-          name
-          description
-          device {
-            name
-            cf_bgp_asn
-            device_role {
-              name
-#}

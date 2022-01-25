@@ -1,1 +1,7 @@
-{# {{ nb_config_contexts | to_nice_yaml(indent=2) }} #}
+{# Render routing policies #}
+{% for key, value in services_data.routing_policy.items() %}
+{%     if value != {} %}
+### {{key}}
+{{ {key: value} | to_nice_yaml(indent=2) }}
+{%     endif %}
+{% endfor %}

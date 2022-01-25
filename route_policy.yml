@@ -1,0 +1,71 @@
+
+  prefix_lists:
+    FOO-PLIST:
+      sequence_numbers:
+        10:
+          action: "permit 10.0.0.0/8 ge 12 le 24"
+        20:
+          action: "permit 11.0.0.0/8"
+        30:
+          action: "permit 12.0.0.0/8 le 32"
+        40:
+          action: "permit 13.0.0.0/8 eq 32"
+        50:
+          action: "deny 0.0.0.0/0 eq 32"
+    BAR-PLIST:
+      sequence_numbers:
+        10:
+          action: "permit 15.0.0.0/8"
+        20:
+          action: "permit 16.0.0.0/8 eq 24"
+        30:
+          action: "deny 17.0.0.0/8 le 32"
+
+  route_maps:
+    RM-FOO:
+      sequence_numbers:
+        10:
+          type: permit
+          description: permit some stuff
+          match:
+          # Optional. Any number of match clauses that are valid EOS cli. if omitted, the rule will match any.
+            - "ip address prefix-list FOO-PLIST"
+            - "source-protocol ospf"
+          set:
+          # Optional. Any number of desired set clauses that are valid EOS cli.
+            - "as-path prepend auto repeat 3"
+        20:
+          type: deny
+          match:
+            - "ip address prefix-list BAR-PLIST"
+    RM-BAR:
+      sequence_numbers:
+        10:
+          type: permit
+          description: permit some stuff
+          match:
+          # Optional. Any number of match clauses that are valid EOS cli. if omitted, the rule will match any.
+            - "ip address prefix-list BAR-PLIST"
+            - "source-protocol ospf"
+          set:
+          # Optional. Any number of desired set clauses that are valid EOS cli.
+            - "as-path prepend auto repeat 3"
+        20:
+          type: deny
+          match:
+            - "ip address prefix-list FOO-PLIST"
+
+
+prefix_lists:
+  BOGONS:
+    sequence_numbers:
+      10:
+        action: "permit 10.0.0.0/8 le 32"
+      20:
+        action: "permit 192.168.0.0/16 le 32"
+      30:
+        action: "permit 172.16.0.0/12 le 32"
+      30:
+        action: "permit 127.0.0.0/8 le 32"
+      40:
+        action: "permit 169.254.0.0/16 le 32"

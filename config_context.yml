@@ -1,16 +1,66 @@
+
 - key: a22004b6-2ca4-4b42-ae78-0ee40e4f3fcd
   value:
     cluster_groups: []
     clusters: []
     created: '2022-01-21'
     data:
-      foo: bar
+      prefix_lists:
+        BAR-PLIST:
+          sequence_numbers:
+            '10':
+              action: permit 15.0.0.0/8
+            '20':
+              action: permit 16.0.0.0/8 eq 24
+            '30':
+              action: deny 17.0.0.0/8 le 32
+        FOO-PLIST:
+          sequence_numbers:
+            '10':
+              action: permit 10.0.0.0/8 ge 12 le 24
+            '20':
+              action: permit 11.0.0.0/8
+            '30':
+              action: permit 12.0.0.0/8 le 32
+            '40':
+              action: permit 13.0.0.0/8 eq 32
+            '50':
+              action: deny 0.0.0.0/0 eq 32
+      route_maps:
+        RM-BAR:
+          sequence_numbers:
+            '10':
+              description: permit some stuff
+              match:
+              - ip address prefix-list BAR-PLIST
+              - source-protocol ospf
+              set:
+              - as-path prepend auto repeat 3
+              type: permit
+            '20':
+              match:
+              - ip address prefix-list FOO-PLIST
+              type: deny
+        RM-FOO:
+          sequence_numbers:
+            '10':
+              description: permit some stuff
+              match:
+              - ip address prefix-list FOO-PLIST
+              - source-protocol ospf
+              set:
+              - as-path prepend auto repeat 3
+              type: permit
+            '20':
+              match:
+              - ip address prefix-list BAR-PLIST
+              type: deny
     description: ''
     device_types: []
     display: TENANT_A_routing_policy
     id: a22004b6-2ca4-4b42-ae78-0ee40e4f3fcd
     is_active: true
-    last_updated: '2022-01-21T16:07:13.435948Z'
+    last_updated: '2022-01-25T13:04:16.225910Z'
     name: TENANT_A_routing_policy
     owner: null
     owner_content_type: null
@@ -20,7 +70,9 @@
     roles: []
     schema: null
     sites: []
-    tags: []
+    tags:
+    - avd
+    - routing_policy
     tenant_groups: []
     tenants:
     - display: TENANT_A
