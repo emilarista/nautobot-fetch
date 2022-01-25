@@ -6,8 +6,20 @@ This role fetches information from Nautobot via the GraphQL interface.
 Requirements
 ------------
 
+Python modules and nautobot:
+
 ansible-core>=2.12.0
 nautobot==v1.1.2 (may work with higher versions but this has not been tested)
+pynautobot==1.0.4 (required for retrieving config contexts which are not queryable from graphql, may work with higher version but this is not tested)
+
+Ansible collections required:
+
+networktocode.nautobot==3.3.0 (required for retrieving config contexts, may work with higher version but this is not tested)
+
+Installation:
+```shell
+ansible-galaxy collection install networktocode.nautobot
+```
 
 The following MUST be present in ansible.cfg:
 
