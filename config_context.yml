@@ -1,0 +1,32 @@
+- key: a22004b6-2ca4-4b42-ae78-0ee40e4f3fcd
+  value:
+    cluster_groups: []
+    clusters: []
+    created: '2022-01-21'
+    data:
+      foo: bar
+    description: ''
+    device_types: []
+    display: TENANT_A_routing_policy
+    id: a22004b6-2ca4-4b42-ae78-0ee40e4f3fcd
+    is_active: true
+    last_updated: '2022-01-21T16:07:13.435948Z'
+    name: TENANT_A_routing_policy
+    owner: null
+    owner_content_type: null
+    owner_object_id: null
+    platforms: []
+    regions: []
+    roles: []
+    schema: null
+    sites: []
+    tags: []
+    tenant_groups: []
+    tenants:
+    - display: TENANT_A
+      id: 7d02021c-6528-4221-8bda-50d26d8d4341
+      name: TENANT_A
+      slug: tenant_a
+      url: http://10.41.41.10:8080/api/tenancy/tenants/7d02021c-6528-4221-8bda-50d26d8d4341/
+    url: http://10.41.41.10:8080/api/extras/config-contexts/a22004b6-2ca4-4b42-ae78-0ee40e4f3fcd/
+    weight: 1000
