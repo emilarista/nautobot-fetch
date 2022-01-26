@@ -41,9 +41,10 @@ DC1:
         - 'graceful-restart restart-time 300'
         - 'graceful-restart'
         - 'bgp asn notation asdot'
-      raw_eos_cli: |
-        management security
-          password encryption-key common
+      structured_config:
+        management_security:
+          password:
+            encryption_key_common: true
   l3leaf:
     defaults:
       virtual_router_mac_address: 00:1c:73:00:dc:00
@@ -66,9 +67,10 @@ DC1:
         - 'graceful-restart restart-time 300'
         - 'graceful-restart'
         - 'bgp asn notation asdot'
-      raw_eos_cli: |
-        management security
-          password encryption-key common
+      structured_config:
+        management_security:
+          password:
+            encryption_key_common: true
     node_groups:
       dc1-borderleaf1:
         nodes:

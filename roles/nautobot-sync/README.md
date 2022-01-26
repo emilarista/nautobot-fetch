@@ -1,49 +1,72 @@
-Role Name
-=========
+# nautobot-sync
 
-This role fetches information from Nautobot via the GraphQL interface.
+This role fetches information from Nautobot via the GraphQL API.
 
-Requirements
-------------
+## Requirements
 
-Python modules and nautobot:
+### Ansible
 
-ansible-core>=2.12.0
-nautobot==v1.1.2 (may work with higher versions but this has not been tested)
-pynautobot==1.0.4 (required for retrieving config contexts which are not queryable from graphql, may work with higher version but this is not tested)
+These roles have been tested with ansible-core 2.12.0.
 
-Ansible collections required:
+### AVD
 
-networktocode.nautobot==3.3.0 (required for retrieving config contexts, may work with higher version but this is not tested)
+Although the roles provided in this repository are not dependent on AVD, their output is fairly useless without it. The recommendation is to install via ansible galaxy:
 
-Installation:
+```shell
+ansible-galaxy collection install arista.avd
+```
+
+The roles are meant to work with the AVD version 3.x data model.
+
+### Nautobot Version
+
+The roles have been tested with nautobot==v1.1.2
+
+The custom fields that have been outlined in the modeling conventions doc need to be present, or the graphql queries posted by the nautobot-sync role will fail. It has been observed that sometimes a nautobot restart is required before the custom fields become available in the graphql API.
+
+### Additional Collections/Modules
+
+#### Python Packages
+
+pynautobot==1.0.4 is required
+
+#### Ansible Collections
+
+networktocode.nautobot==3.3.0 is required for grabbing custom configuration contexts via the API (not available through graphql API at the moment)
+
 ```shell
 ansible-galaxy collection install networktocode.nautobot
 ```
 
+## ansible.cfg
+
 The following MUST be present in ansible.cfg:
 
 ```shell
-host_key_checking=False
 gathering=explicit
 jinja2_extensions=jinja2.ext.loopcontrols,jinja2.ext.do
 duplicate_dict_key=error
 ```
 
-Role Variables
---------------
+If you are storing the roles in the project directory, you need to point to them in ansible.cfg as well:
+
+```shell
+roles_path = roles
+```
+
+Paths to ansible collections are also needed, at least for the included custom filter:
+
+```shell
+collections_paths = ansible-emil
+```
+
+## Role Variables
 
 The nautobot host MUST have ansible_host: <ip/hostname> and api_token: < api-token > defined in the inventory or host_vars file.
 
-Dependencies
-------------
+## Example Playbook
 
-None
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Here is how the role is used in a playbook. The main README for the repository includes an example of both roles used in a playbook.
 
 ```yaml
 ---
@@ -56,12 +79,10 @@ Including an example of how to use your role (for instance, with variables passe
         name: nautobot-sync
 ```
 
-License
--------
+## License
 
 BSD
 
-Author Information
-------------------
+## Author Information
 
 emil@arista.com
