@@ -1,0 +1,135 @@
+---
+
+tenants:
+  Bolag1:
+    mac_vrf_vni_base: 710171
+    l2vlans:
+    vrfs:
+      Bolag1:
+        vrf_id: 2
+        ospf:
+          enabled: true
+        svis:
+          1234:
+            enabled: true
+            name: bgp_peering_example
+            ip_virtual_router_address: 10.123.234.1
+            nodes:
+              dja-border-01a:
+                ip_address: 10.123.234.2/27
+              dja-border-01b:
+                ip_address: 10.123.234.3/27
+            tags:
+              - AVD
+            ip_helpers:
+          4:
+            enabled: true
+            name: vl-Bolag1-4
+            ip_address_virtual: 100.64.0.1/24
+            tags:
+              - AVD
+          3:
+            enabled: true
+            name: vl-Bolag1-3
+            ip_address_virtual: 172.0.0.1/24
+            tags:
+              - AVD
+            ip_helpers:
+              1.1.1.1:
+              2.2.2.2:
+        bgp_peers:
+          10.123.234.4:
+            remote_as: 1234
+            description: dja-ext_router-01
+            nodes: ['dja-border-01a', 'dja-border-01b']
+            maximum_routes: 10000
+            default_originate:
+              always: true
+            password: someencryptedpassword
+            local_as: 150
+            route_map_in: RM-BAR
+            route_map_out: RM-FOO
+        l3_interfaces:
+        static_routes:
+          - destination_address_prefix: 80.80.80.0/24
+            gateway: 1.2.3.4
+            name: Static Route Prefix
+  Bolag2:
+    mac_vrf_vni_base: 740171
+    l2vlans:
+      7:
+        name: vl-Bolag2-7
+        tags: ['AVD']
+    vrfs:
+      Bolag2:
+        vrf_id: 5
+        svis:
+          6:
+            enabled: true
+            name: vl-Bolag2-6
+            ip_address_virtual: 10.0.0.1/32
+            tags:
+              - AVD
+          6:
+            enabled: true
+            name: vl-Bolag2-6
+            ip_address_virtual: 172.20.0.1/32
+            tags:
+              - AVD
+        bgp_peers:
+        l3_interfaces:
+        static_routes:
+### route_maps
+route_maps:
+  RM-BAR:
+    sequence_numbers:
+      '10':
+        description: permit some stuff
+        match:
+        - ip address prefix-list BAR-PLIST
+        - source-protocol ospf
+        set:
+        - as-path prepend auto repeat 3
+        type: permit
+      '20':
+        match:
+        - ip address prefix-list FOO-PLIST
+        type: deny
+  RM-FOO:
+    sequence_numbers:
+      '10':
+        description: permit some stuff
+        match:
+        - ip address prefix-list FOO-PLIST
+        - source-protocol ospf
+        set:
+        - as-path prepend auto repeat 3
+        type: permit
+      '20':
+        match:
+        - ip address prefix-list BAR-PLIST
+        type: deny
+
+### prefix_lists
+prefix_lists:
+  BAR-PLIST:
+    sequence_numbers:
+      '10':
+        action: permit 15.0.0.0/8
+      '20':
+        action: permit 16.0.0.0/8 eq 24
+      '30':
+        action: deny 17.0.0.0/8 le 32
+  FOO-PLIST:
+    sequence_numbers:
+      '10':
+        action: permit 10.0.0.0/8 ge 12 le 24
+      '20':
+        action: permit 11.0.0.0/8
+      '30':
+        action: permit 12.0.0.0/8 le 32
+      '40':
+        action: permit 13.0.0.0/8 eq 32
+      '50':
+        action: deny 0.0.0.0/0 eq 32
+

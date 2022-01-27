@@ -38,6 +38,8 @@
             cf_bgp_asn
             cf_route_map_in
             cf_route_map_out
+            cf_bgp_password
+            cf_default_originate
             device_role {
               name
             }

@@ -153,5 +153,5 @@
     nb_config_contexts: "{{ query('networktocode.nautobot.lookup', 'config-contexts', api_endpoint='http://' ~ ansible_host ~ ':8080/', token=api_token) }}"
   delegate_to: localhost
   tags:
-    - never
+    - always
     - contexts

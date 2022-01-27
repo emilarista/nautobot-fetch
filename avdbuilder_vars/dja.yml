@@ -1,0 +1,61 @@
+---
+
+
+dc_name: dja
+
+mgmt_gateway: 172.17.192.1
+cvp_instance_ip: 172.17.190.17
+cvp_ingestauth_key: arista2021
+evpn_rd_type: {'admin_subfield': 'bgp_as'}
+name_servers: ['8.8.8.8', '8.8.4.4']
+local_users: {'avd-temp': {'privilege': 15, 'role': 'network-admin', 'sha512_password': '$6$ynhlsSe4uNgQzVrc$u1AVBeBKmaB20UThb/6790TZ6Qg9GYOn7UsLp1srfKlA5ZimOkaIfqS2e28P7mZwDUVump2UusG0OcsuZyj6N1'}, 'cvpadmin': {'privilege': 15, 'role': 'network-admin', 'sha512_password': '$6$E4seoDhy3kKLOM38$8ec11qfP8awGCb//msPfcPXEX2Eet9jz0qDj5ldRerGpYDPSdg6oc6/X57h/TOYWvOZwPNMIuY0dRw5DPx4bh0'}}
+
+spine:
+  defaults: {'loopback_ipv4_pool': '100.64.11.0/24', 'bgp_as': '64513', 'structured_config': {'management_security': {'password': {'encryption_key_common': True}}}, 'bgp_defaults': ['no bgp default ipv4-unicast', 'distance bgp 20 200 200', 'graceful-restart restart-time 300', 'graceful-restart', 'bgp asn notation asdot']}
+  nodes:
+    dja-spine-01:
+      evpn_role: none
+      id: 1
+      mgmt_ip: 172.17.192.49/24
+    dja-spine-02:
+      evpn_role: none
+      id: 2
+      mgmt_ip: 172.17.192.50/24
+
+
+l3leaf:
+  defaults: {'virtual_router_mac_address': '00:1c:73:00:dc:00', 'uplink_ipv4_pool': '100.64.10.0/24', 'loopback_ipv4_offset': 10, 'loopback_ipv4_pool': '100.64.11.0/24', 'vtep_loopback_ipv4_pool': '100.64.12.0/24', 'mlag_peer_l3_ipv4_pool': '100.64.13.0/24', 'mlag_peer_ipv4_pool': '100.64.14.0/24', 'max_uplink_switches': 4, 'uplink_interfaces': ['Ethernet1', 'Ethernet2'], 'mlag_interfaces': ['Ethernet11', 'Ethernet12'], 'spanning_tree_priority': 4096, 'spanning_tree_mode': 'mstp', 'structured_config': {'management_security': {'password': {'encryption_key_common': True}}}, 'bgp_defaults': ['no bgp default ipv4-unicast', 'distance bgp 20 200 200', 'graceful-restart restart-time 300', 'graceful-restart', 'bgp asn notation asdot']}
+  node_groups:
+    dja-border:
+      filter: {'tenants': ['all'], 'tags': ['all']}
+      bgp_as: 64701
+      evpn_role: server
+      evpn_route_servers: ['sat-border-01a', 'sat-border-01b']
+      nodes:
+        dja-border-01a:
+          id: 1
+          mgmt_ip: 172.17.192.51/24
+          uplink_switches: ['dja-spine-01', 'dja-spine-02']
+          uplink_switch_interfaces: ['Ethernet1', 'Ethernet1']
+        dja-border-01b:
+          id: 2
+          mgmt_ip: 172.17.192.52/24
+          uplink_switches: ['dja-spine-01', 'dja-spine-02']
+          uplink_switch_interfaces: ['Ethernet2', 'Ethernet2']
+    dja-leaf:
+      filter: {'tenants': ['all'], 'tags': ['all']}
+      bgp_as: 64601
+      evpn_role: client
+      evpn_route_servers: ['dja-border-01a', 'dja-border-01b']
+      nodes:
+        dja-leaf-01a:
+          id: 3
+          mgmt_ip: 172.17.192.47/24
+          uplink_switches: ['dja-spine-01', 'dja-spine-02']
+          uplink_switch_interfaces: ['Ethernet3', 'Ethernet3']
+        dja-leaf-01b:
+          id: 4
+          mgmt_ip: 172.17.192.48/24
+          uplink_switches: ['dja-spine-01', 'dja-spine-02']
+          uplink_switch_interfaces: ['Ethernet4', 'Ethernet4']
+

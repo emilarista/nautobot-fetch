@@ -88,6 +88,18 @@ tenants:
 {%                             if services_data.default_peering_devices is defined and services_data.default_peering_devices | length > 0 %}
             nodes: {{ services_data.default_peering_devices }}
 {%                             endif %}
+            maximum_routes: {{ services_data.bgp_peers_maximum_routes }}
+{%                             if ip_address.interface.device.cf_default_originate is defined and ip_address.interface.device.cf_default_originate is not none %}
+{%                                 if ip_address.interface.device.cf_default_originate == "always" %}
+            default_originate:
+              always: true
+{%                                 elif ip_address.interface.device.cf_default_originate == "on" %}
+            default_originate: true
+{%                                 endif %}
+{%                             endif %}
+{%                             if ip_address.interface.device.cf_bgp_password is defined and ip_address.interface.device.cf_bgp_password is not none %}
+            password: {{ ip_address.interface.device.cf_bgp_password }}
+{%                             endif %}
 {# Implement logic to loop through svis and find the virtual router address to set the nexthop #}
 {# test: {{ ["192.168.0.7/24"] | ipaddr("host/prefix") | ipaddr("subnet") | ipaddr("1") }} #}
 {# implement local_as knob. #}
@@ -99,20 +111,22 @@ tenants:
 {%                             endif %}
 {%                             if ip_address.interface.device.cf_route_map_out is defined and ip_address.interface.device.cf_route_map_out is not none %}
             route_map_out: {{ ip_address.interface.device.cf_route_map_out }}
-{%                             endif %}
-{%                             set peer_subnet = [ip_address.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
-{%                             for svi in vrf.svis %}
-{%                                 if svi.ip_addresses | length > 0 %}
-{%                                     for ip in svi.ip_addresses %}
-{%                                         if ip.type == "VIP" %}
-{%                                             set svi_subnet = [ip.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
-{%                                             if peer_subnet == svi_subnet %}
+{%                             else %}
+{# route_map_out and set_ipv4_nexthop are mutually exclusive, route-map-out takes precedence #}
+{%                                 set peer_subnet = [ip_address.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
+{%                                 for svi in vrf.svis %}
+{%                                     if svi.ip_addresses | length > 0 %}
+{%                                         for ip in svi.ip_addresses %}
+{%                                             if ip.type == "VIP" %}
+{%                                                 set svi_subnet = [ip.address | ipaddr("host/prefix") | ipaddr("subnet")] %}
+{%                                                 if peer_subnet == svi_subnet %}
             set_ipv4_next_hop: {{ ip.address.split("/")[0] }}
-{%                                             endif  %}
-{%                                         endif %}
-{%                                     endfor %}
-{%                                 endif %}
-{%                             endfor %}
+{%                                                 endif  %}
+{%                                             endif %}
+{%                                         endfor %}
+{%                                     endif %}
+{%                                 endfor %}
+{%                             endif %}
 {%                         endif %}
 {%                     endif %}
 {%                 endif %}

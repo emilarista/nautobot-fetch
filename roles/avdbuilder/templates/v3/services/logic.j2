@@ -20,6 +20,7 @@
 {# {{ services_data.tenants | emil.nbavd.structure_tenants | to_nice_yaml(indent=2) }} #}
 {% set services_data.default_peering_devices = hostvars[inventory_hostname][services_data.site_name].default_peering_devices %}
 {% set services_data.fabric_local_as = hostvars[inventory_hostname].avd_fabric_defaults.fabric_local_as | default(none) %}
+{% set services_data.bgp_peers_maximum_routes = hostvars[inventory_hostname].avd_fabric_defaults.bgp_peers_maximum_routes | default(10000) %}
 {# Handling routing policies #}
 {% set services_data.routing_policy = {
     "route_maps": {},

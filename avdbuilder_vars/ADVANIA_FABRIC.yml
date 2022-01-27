@@ -1,0 +1,138 @@
+---
+
+bfd_multihop:
+  interval: 10000
+  min_rx: 10000
+  multiplier: 3
+bgp_ecmp: 4
+bgp_maximum_paths: 4
+custom_structured_configuration_ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 0.se.pool.ntp.org
+    preferred: false
+    vrf: MGMT
+  - name: 1.se.pool.ntp.org
+    preferred: true
+    vrf: MGMT
+custom_structured_configuration_switchport_default:
+  mode: routed
+evpn_ebgp_multihop: 10
+evpn_prevent_readvertise_to_server: true
+evpn_rd_type:
+  admin_subfield: overlay_loopback
+evpn_rt_type:
+  admin_subfield: 65000
+fabric_local_as: 150
+fabric_name: ADVANIA_FABRIC
+l3_edge:
+  p2p_links:
+  - as:
+    - 64704
+    - 64700
+    bfd: false
+    id: 1
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet10
+    - Ethernet10
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - sat-border-01a
+    - thu-border-01a
+  - as:
+    - 64704
+    - 64700
+    bfd: false
+    id: 2
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet10
+    - Ethernet10
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - sat-border-01b
+    - thu-border-01b
+  - as:
+    - 64704
+    - 64701
+    bfd: false
+    id: 3
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet3
+    - Ethernet3
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - sat-border-01b
+    - dja-border-01a
+  - as:
+    - 64704
+    - 64702
+    bfd: false
+    id: 4
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet3
+    - Ethernet3
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - sat-border-01a
+    - ste-border-01a
+  - as:
+    - 64702
+    - 64700
+    bfd: false
+    id: 5
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet3
+    - Ethernet3
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - ste-border-01b
+    - thu-border-01a
+  - as:
+    - 64700
+    - 64703
+    bfd: false
+    id: 6
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet3
+    - Ethernet3
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - thu-border-01b
+    - kro-border-01a
+  - as:
+    - 64703
+    - 64701
+    bfd: false
+    id: 7
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet10
+    - Ethernet10
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - kro-border-01a
+    - dja-border-01a
+  - as:
+    - 64703
+    - 64701
+    bfd: false
+    id: 8
+    include_in_underlay_protocol: true
+    interfaces:
+    - Ethernet10
+    - Ethernet10
+    ip_pool: borderleaf_dci_pool
+    nodes:
+    - kro-border-01b
+    - dja-border-01b
+  p2p_links_ip_pools:
+    borderleaf_dci_pool: 100.80.48.0/23
+vxlan_vlan_aware_bundles: false
