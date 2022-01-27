@@ -36,6 +36,8 @@
           device {
             name
             cf_bgp_asn
+            cf_route_map_in
+            cf_route_map_out
             device_role {
               name
             }

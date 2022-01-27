@@ -137,3 +137,121 @@ tenants:
         bgp_peers:
         l3_interfaces:
         static_routes:
+### route_maps
+route_maps:
+  RM-BAR:
+    sequence_numbers:
+      '10':
+        description: permit some stuff
+        match:
+        - ip address prefix-list BAR-PLIST
+        - source-protocol ospf
+        set:
+        - as-path prepend auto repeat 3
+        type: permit
+      '20':
+        match:
+        - ip address prefix-list FOO-PLIST
+        - ip address prefix-list BOGONS
+        type: deny
+  RM-BAR_B:
+    sequence_numbers:
+      '10':
+        description: permit some stuff
+        match:
+        - ip address prefix-list B_BAR-PLIST
+        - source-protocol ospf
+        set:
+        - as-path prepend auto repeat 3
+        type: permit
+      '20':
+        match:
+        - ip address prefix-list B_FOO-PLIST
+        - ip address prefix-list BOGONS
+        type: deny
+  RM-FOO:
+    sequence_numbers:
+      '10':
+        description: permit some stuff
+        match:
+        - ip address prefix-list FOO-PLIST
+        - source-protocol ospf
+        set:
+        - as-path prepend auto repeat 3
+        type: permit
+      '20':
+        match:
+        - ip address prefix-list BAR-PLIST
+        - ip address prefix-list BOGONS
+        type: deny
+  RM-FOO_B:
+    sequence_numbers:
+      '10':
+        description: permit some stuff
+        match:
+        - ip address prefix-list B_FOO-PLIST
+        - source-protocol ospf
+        set:
+        - as-path prepend auto repeat 3
+        type: permit
+      '20':
+        match:
+        - ip address prefix-list B_BAR-PLIST
+        - ip address prefix-list BOGONS
+        type: deny
+
+### prefix_lists
+prefix_lists:
+  BAR-PLIST:
+    sequence_numbers:
+      '10':
+        action: permit 15.0.0.0/8
+      '20':
+        action: permit 16.0.0.0/8 eq 24
+      '30':
+        action: deny 17.0.0.0/8 le 32
+  BOGONS:
+    sequence_numbers:
+      '10':
+        action: permit 10.0.0.0/8 le 32
+      '20':
+        action: permit 192.168.0.0/16 le 32
+      '30':
+        action: permit 172.16.0.0/12 le 32
+      '40':
+        action: permit 127.0.0.0/8 le 32
+      '50':
+        action: permit 169.254.0.0/16 le 32
+  B_BAR-PLIST:
+    sequence_numbers:
+      '10':
+        action: permit 15.0.0.0/8
+      '20':
+        action: permit 16.0.0.0/8 eq 24
+      '30':
+        action: deny 17.0.0.0/8 le 32
+  B_FOO-PLIST:
+    sequence_numbers:
+      '10':
+        action: permit 10.0.0.0/8 ge 12 le 24
+      '20':
+        action: permit 11.0.0.0/8
+      '30':
+        action: permit 12.0.0.0/8 le 32
+      '40':
+        action: permit 13.0.0.0/8 eq 32
+      '50':
+        action: deny 0.0.0.0/0 eq 32
+  FOO-PLIST:
+    sequence_numbers:
+      '10':
+        action: permit 10.0.0.0/8 ge 12 le 24
+      '20':
+        action: permit 11.0.0.0/8
+      '30':
+        action: permit 12.0.0.0/8 le 32
+      '40':
+        action: permit 13.0.0.0/8 eq 32
+      '50':
+        action: deny 0.0.0.0/0 eq 32
+
