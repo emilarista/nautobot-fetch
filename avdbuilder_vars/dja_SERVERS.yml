@@ -30,7 +30,7 @@ servers:
         - Ethernet5
         switches:
         - dja-border-01b
-        vlans: '4'
+        vlans: 4,10
 
   dja-leaf-01a_mlag2:
     rack: dja-rack1
@@ -47,5 +47,5 @@ servers:
         switches:
         - dja-leaf-01a
         - dja-leaf-01b
-        vlans: '3'
+        vlans: 3,9
 

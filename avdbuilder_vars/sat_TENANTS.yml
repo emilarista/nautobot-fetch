@@ -15,13 +15,23 @@ tenants:
         static_routes:
           - destination_address_prefix: 80.80.80.0/24
             gateway: 1.2.3.4
-            name: Static Route Prefix
+            name: Static_Route_Test_Description
   Bolag2:
     mac_vrf_vni_base: 740171
     l2vlans:
     vrfs:
       Bolag2:
         vrf_id: 5
+        svis:
+        bgp_peers:
+        l3_interfaces:
+        static_routes:
+  Bolag3:
+    mac_vrf_vni_base: 750171
+    l2vlans:
+    vrfs:
+      Bolag3:
+        vrf_id: 8
         svis:
         bgp_peers:
         l3_interfaces:

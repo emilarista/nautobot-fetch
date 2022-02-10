@@ -97,7 +97,7 @@ tenants:
             default_originate: true
 {%                                 endif %}
 {%                             endif %}
-{%                             if ip_address.interface.device.cf_bgp_password is defined and ip_address.interface.device.cf_bgp_password is not none %}
+{%                             if ip_address.interface.device.cf_bgp_password is defined and ip_address.interface.device.cf_bgp_password not in [none, ""] %}
             password: {{ ip_address.interface.device.cf_bgp_password }}
 {%                             endif %}
 {# Implement logic to loop through svis and find the virtual router address to set the nexthop #}
@@ -176,7 +176,7 @@ tenants:
           - destination_address_prefix: {{ prefix.prefix }}
             gateway: {{ prefix.cf_next_hop }}
 {%                 if prefix.description != "" %}
-            name: {{ prefix.description }}
+            name: {{ prefix.description | replace(" ", "_") }}
 {%                 endif %}
 {%             endif %}
 {%         endfor %}
