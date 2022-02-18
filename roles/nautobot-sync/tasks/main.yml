@@ -5,6 +5,7 @@
     url: "http://{{ ansible_host }}:8080/api/graphql/"
     validate_certs: no
     method: POST
+    timeout: 120
     headers:
       Authorization: 'Token {{ api_token }}'
     body_format: json
@@ -30,6 +31,7 @@
     url: "http://{{ ansible_host }}:8080/api/graphql/"
     validate_certs: no
     method: POST
+    timeout: 120
     headers:
       Authorization: 'Token {{ api_token }}'
     body_format: json
@@ -55,6 +57,7 @@
     url: "http://{{ ansible_host }}:8080/api/graphql/"
     validate_certs: no
     method: POST
+    timeout: 120
     headers:
       Authorization: 'Token {{ api_token }}'
     body_format: json
@@ -80,6 +83,7 @@
     url: "http://{{ ansible_host }}:8080/api/graphql/"
     validate_certs: no
     method: POST
+    timeout: 120
     headers:
       Authorization: 'Token {{ api_token }}'
     body_format: json
@@ -105,6 +109,7 @@
     url: "http://{{ ansible_host }}:8080/api/graphql/"
     validate_certs: no
     method: POST
+    timeout: 120
     headers:
       Authorization: 'Token {{ api_token }}'
     body_format: json
@@ -130,6 +135,7 @@
     url: "http://{{ ansible_host }}:8080/api/graphql/"
     validate_certs: no
     method: POST
+    timeout: 120
     headers:
       Authorization: 'Token {{ api_token }}'
     body_format: json
