@@ -23,10 +23,10 @@ def clean_l2vlans(l2vlans):
                             if tag["name"].lower() == "avd":
                                 found_avd_l3vlan = True
                                 break
-    if found_avd_l3vlan == True:
-        pass
-    else:
-        cleaned_l2vlans.append(l2vlan)
+        if found_avd_l3vlan == True:
+            pass
+        else:
+            cleaned_l2vlans.append(l2vlan)
 
     return cleaned_l2vlans
 
