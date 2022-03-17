@@ -39,6 +39,9 @@
 {%                     for vlan in interface.tagged_vlans %}
 {%                         do adapter_vlans.append(vlan.vid) %}
 {%                     endfor %}
+{%                     if interface.untagged_vlan is not none and interface.untagged_vlan.vid not in adapter_vlans %}
+{%                         do adapter_vlans.append(interface.untagged_vlan.vid) %}
+{%                     endif %}
 {%                     do connection_data.adapter.update({"vlans": adapter_vlans | join(",")}) %}
 {%                 endif %}
 {%             elif interface.mode == "ACCESS" %}

@@ -1,0 +1,114 @@
+---
+
+servers:
+# Single Interface Connections
+  dc1-leaf01a_Ethernet6:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: access
+        switch_ports:
+        - Ethernet6
+        switches:
+        - dc1-leaf01a
+        vlans: '11'
+
+  dc1-leaf01a_Ethernet7:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: trunk
+        switch_ports:
+        - Ethernet7
+        switches:
+        - dc1-leaf01a
+        vlans: 10,11,20,30
+
+  A_ESXi01_Eth0:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: trunk
+        switch_ports:
+        - Ethernet8
+        switches:
+        - dc1-leaf01a
+
+  A_ESXi01_Eth1:
+    rack: A1
+    adapters:
+      - endpoint_ports:
+        - Eth1
+        mode: trunk
+        switch_ports:
+        - Ethernet8
+        switches:
+        - dc1-leaf01b
+
+  dc1-leaf03_Ethernet6:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: access
+        switch_ports:
+        - Ethernet6
+        switches:
+        - dc1-leaf03
+        vlans: '40'
+
+  dc1-leaf03_Ethernet7:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        mode: trunk
+        native_vlan: '10'
+        switch_ports:
+        - Ethernet7
+        switches:
+        - dc1-leaf03
+
+
+# Non-MLAG Port-Channel Connections
+  dc1-leaf03_Port-Channel3:
+    rack: B1
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        - Eth1
+        mode: trunk
+        native_vlan: '11'
+        port_channel:
+          mode: active
+        switch_ports:
+        - Ethernet3
+        - Ethernet4
+        switches:
+        - dc1-leaf03
+        - dc1-leaf03
+        vlans: 11,30,40
+
+
+# MLAG Connections
+  dc1-borderleaf1a_mlag8:
+    rack: 
+    adapters:
+      - endpoint_ports:
+        - Eth0
+        - Eth1
+        mode: trunk
+        native_vlan: '30'
+        port_channel:
+          mode: active
+        switch_ports:
+        - Ethernet8
+        - Ethernet8
+        switches:
+        - dc1-borderleaf1a
+        - dc1-borderleaf1b
+        vlans: 10,11,30
+
