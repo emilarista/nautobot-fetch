@@ -11,3 +11,4 @@ all:
           ansible_host: 10.254.20.18
     CVP:
       hosts:
+

@@ -17,3 +17,13 @@
         fabric_name: TEST-FABRIC
         site_names: ["DC1", "DC2"]
       # debugger: always
+
+    - name: copy output to group_vars
+      copy:
+        src: "{{ item }}"
+        dest: "group_vars/"
+        owner: "emil"
+        mode: 0600
+      with_fileglob:
+        - "avdbuilder_vars/*"
+      delegate_to: localhost
