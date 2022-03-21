@@ -44,6 +44,10 @@
 {%                 set eos_cli = interface.cf_raw_eos_cli.split(",") | join("\n") %}
 {%                 do connection_data.adapter.update({"raw_eos_cli": eos_cli})%}
 {%             endif %}
+{#             Speed #}
+{%             if interface.cf_speed is defined and interface.cf_speed != "" and interface.cf_speed is not none %}
+{%                 do connection_data.adapter.update({"speed": interface.cf_speed})%}
+{%             endif %}
   {{ connection_data.name }}:
     rack: {{ connection_data.rack | default("") }}
     adapters:

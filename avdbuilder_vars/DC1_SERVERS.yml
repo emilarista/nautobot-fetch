@@ -104,6 +104,7 @@ servers:
         native_vlan: '30'
         port_channel:
           mode: active
+        speed: 10G
         switch_ports:
         - Ethernet8
         - Ethernet8

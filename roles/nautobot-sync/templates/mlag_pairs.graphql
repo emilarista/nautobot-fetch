@@ -45,6 +45,7 @@
           vid
         }
         cf_raw_eos_cli
+        cf_speed
         mode
         lag {
           name
