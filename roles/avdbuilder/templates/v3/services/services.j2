@@ -50,6 +50,9 @@ tenants:
                 ip_address: {{ ip.address }}
 {%                     endfor %}
 {%                 endif %}
+{%                 if svi.vlan.cf_mtu is defined and svi.vlan.cf_mtu is not none and svi.vlan.cf_mtu != "" %}
+            mtu: {{ svi.vlan.cf_mtu }}
+{%                 endif %}
             tags:
 {%                 if svi.vlan.tags is defined and svi.vlan.tags is not none and svi.vlan.tags | length > 0 %}
 {%                     for tag in svi.vlan.tags %}
