@@ -28,6 +28,15 @@ avd_fabric_defaults:
   vxlan_vlan_aware_bundles: false
   custom_structured_configuration_switchport_default:
     mode: routed
+  platform_settings:
+  - platforms: [ default ]
+    reload_delay:
+      mlag: 330
+      non_mlag: 300
+  - platforms: [ "7280SR3" ]
+    reload_delay:
+      mlag: 630
+      non_mlag: 600
 
 # Name must match site name in nautobot
 DC1:

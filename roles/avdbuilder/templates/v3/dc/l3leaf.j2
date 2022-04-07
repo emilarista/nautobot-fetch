@@ -14,6 +14,7 @@ l3leaf:
 {%        for node in node_group.members %}
         {{ node.name }}:
           id: {{ node.cf_device_id }}
+          platform: {{ node.device_type.model }}
           mgmt_ip: {{ node.primary_ip4.address }}
 {%            if node.uplink_switches is defined and node.uplink_switches is not none %}
           uplink_switches: {{ node.uplink_switches }}
@@ -35,6 +36,7 @@ l3leaf:
       nodes:
         {{ leaf.name }}:
           id: {{ leaf.cf_device_id }}
+          platform: {{ leaf.device_type.model }}
           mgmt_ip: {{ leaf.primary_ip4.address }}
 {%         if leaf.uplink_switches is defined and leaf.uplink_switches is not none %}
           uplink_switches: {{ leaf.uplink_switches }}
