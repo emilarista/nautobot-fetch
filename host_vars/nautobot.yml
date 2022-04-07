@@ -45,6 +45,11 @@ DC1:
         management_security:
           password:
             encryption_key_common: true
+    nodes:
+      dc1-spine1:
+        bgp_as: 1234
+      dc1-spine2:
+        bgp_as: 1234
   l3leaf:
     defaults:
       virtual_router_mac_address: 00:1c:73:00:dc:00
@@ -76,20 +81,26 @@ DC1:
         nodes:
           dc1-borderleaf1a:
             uplink_switch_interfaces: [Ethernet5, Ethernet5]
+            bgp_as: 2345
           dc1-borderleaf1b:
             uplink_switch_interfaces: [Ethernet6, Ethernet6]
+            bgp_as: 2345
       dc1-leaf01:
         nodes:
           dc1-leaf01a:
             uplink_switch_interfaces: [Ethernet1, Ethernet1]
+            bgp_as: 2346
           dc1-leaf01b:
             uplink_switch_interfaces: [Ethernet2, Ethernet2]
+            bgp_as: 2346
       dc1-leaf2:
         nodes:
           dc1-leaf02a:
             uplink_switch_interfaces: [Ethernet3, Ethernet3]
+            bgp_as: 2347
           dc1-leaf02b:
             uplink_switch_interfaces: [Ethernet4, Ethernet4]
+            bgp_as: 2347
 
   l2leaf:
     defaults: false

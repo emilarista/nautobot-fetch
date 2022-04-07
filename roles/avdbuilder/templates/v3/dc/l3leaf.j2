@@ -5,7 +5,9 @@ l3leaf:
 {%     if node_group.site.name == dc_data.site_name %}
     {{ node_group.name }}:
       filter: {{ node_group.filter }}
-      bgp_as: {{ node_group.cf_bgp_asn }}
+{%         if node_group.bgp_as is defined and node_group.bgp_as is not none and node_group.bgp_as != "" %}
+      bgp_as: {{ node_group.bgp_as }}
+{%         endif %}
       evpn_role: {{ node_group.cf_evpn_role }}
       evpn_route_servers: {{ node_group.evpn_route_servers | default([]) }}
       nodes:
@@ -15,6 +17,9 @@ l3leaf:
           mgmt_ip: {{ node.primary_ip4.address }}
 {%            if node.uplink_switches is defined and node.uplink_switches is not none %}
           uplink_switches: {{ node.uplink_switches }}
+{%            endif %}
+{%            if node.bgp_as is defined and node.bgp_as is not none %}
+          bgp_as: {{ node.bgp_as }}
 {%            endif %}
           uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
 {%        endfor %}

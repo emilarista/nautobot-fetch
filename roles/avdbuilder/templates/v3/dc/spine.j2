@@ -8,6 +8,9 @@ spine:
       evpn_role: {{ spine.cf_evpn_role }}
       id: {{ spine.cf_device_id }}
       mgmt_ip: {{ spine.primary_ip4.address }}
+{%         if spine.bgp_as is defined and spine.bgp_as is not none %}
+      bgp_as: {{ spine.bgp_as }}
+{%         endif %}
 {%     endif %}
 {% endfor %}
 
