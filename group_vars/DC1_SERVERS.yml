@@ -95,7 +95,7 @@ servers:
 
 # MLAG Connections
   dc1-borderleaf1a_mlag8:
-    rack:
+    rack: 
     adapters:
       - endpoint_ports:
         - Eth0
@@ -104,7 +104,7 @@ servers:
         native_vlan: '30'
         port_channel:
           mode: active
-        speed: forced 10000-full
+        speed: 10G
         switch_ports:
         - Ethernet8
         - Ethernet8

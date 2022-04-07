@@ -39,13 +39,13 @@
 {% endfor %}
 {# tacking on site name and other stuff to l3leaf_mlag_pairs for ease of templating #}
 {% for mlag_pair in dc_data.l3leaf_mlag_pairs %}
-{%     set mlag_pair_bgp_as = hostvars[inventory_hostname][dc_data.site_name].l3leaf.node_groups[mlag_pair.name].bgp_as | mlag_pair.cf_bgp_asn %}
+{%     set mlag_pair_bgp_as = hostvars[inventory_hostname][dc_data.site_name].l3leaf.node_groups[mlag_pair.name].bgp_as | default(mlag_pair.cf_bgp_asn) %}
 {%     do mlag_pair.update({"bgp_as": mlag_pair_bgp_as}) %}
 {%     for device in mlag_pair.members %}
 {%         do mlag_pair.update({"site": {"name": device.site.name}}) %}
 {%             set device_ul_switch_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
 {%             set device_ul_switches = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switches | default([]) %}
-{%             set device_bgp_as = hostvars[inventory_hostname][dc_data.site_name].l3leaf.node_groups[mlag_pair.name].nodes[device.name]bgp_as | default(none) %}
+{%             set device_bgp_as = hostvars[inventory_hostname][dc_data.site_name].l3leaf.node_groups[mlag_pair.name].nodes[device.name].bgp_as | default(none) %}
 {%             do device.update({"uplink_switch_interfaces": device_ul_switch_interfaces}) %}
 {%             do device.update({"uplink_switches": device_ul_switches} )%}
 {%             do device.update({"bgp_as": device_bgp_as}) %}

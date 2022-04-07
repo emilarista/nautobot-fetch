@@ -28,11 +28,13 @@ l3leaf:
       nodes:
         dc2-borderleaf1a:
           id: 5
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.108/24
           uplink_switches: []
           uplink_switch_interfaces: ['Ethernet5', 'Ethernet5']
         dc2-borderleaf1b:
           id: 6
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.109/24
           uplink_switches: []
           uplink_switch_interfaces: ['Ethernet6', 'Ethernet6']
@@ -44,11 +46,13 @@ l3leaf:
       nodes:
         dc2-leaf01a:
           id: 1
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.112/24
           uplink_switches: []
           uplink_switch_interfaces: ['Ethernet1', 'Ethernet1']
         dc2-leaf01b:
           id: 2
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.113/24
           uplink_switches: []
           uplink_switch_interfaces: ['Ethernet2', 'Ethernet2']

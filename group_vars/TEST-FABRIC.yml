@@ -27,4 +27,15 @@ evpn_rt_type:
   admin_subfield: 65000
 fabric_local_as: 150
 fabric_name: ADVANIA_FABRIC
+platform_settings:
+- platforms:
+  - default
+  reload_delay:
+    mlag: 330
+    non_mlag: 300
+- platforms:
+  - 7280SR3
+  reload_delay:
+    mlag: 630
+    non_mlag: 600
 vxlan_vlan_aware_bundles: false

@@ -11,10 +11,12 @@ spine:
       evpn_role: none
       id: 1
       mgmt_ip: 10.30.30.101/24
+      bgp_as: 1234
     dc1-spine2:
       evpn_role: none
       id: 2
       mgmt_ip: 10.30.30.102/24
+      bgp_as: 1234
 
 
 l3leaf:
@@ -28,13 +30,17 @@ l3leaf:
       nodes:
         dc1-borderleaf1a:
           id: 5
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.106/24
           uplink_switches: []
+          bgp_as: 2345
           uplink_switch_interfaces: ['Ethernet5', 'Ethernet5']
         dc1-borderleaf1b:
           id: 6
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.107/24
           uplink_switches: []
+          bgp_as: 2345
           uplink_switch_interfaces: ['Ethernet6', 'Ethernet6']
     dc1-leaf01:
       filter: {'tenants': ['all'], 'tags': ['all']}
@@ -44,13 +50,17 @@ l3leaf:
       nodes:
         dc1-leaf01a:
           id: 1
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.103/24
           uplink_switches: []
+          bgp_as: 2346
           uplink_switch_interfaces: ['Ethernet1', 'Ethernet1']
         dc1-leaf01b:
           id: 2
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.104/24
           uplink_switches: []
+          bgp_as: 2346
           uplink_switch_interfaces: ['Ethernet2', 'Ethernet2']
     dc1-leaf03:
       filter: {'tenants': ['all'], 'tags': ['all']}
@@ -60,6 +70,7 @@ l3leaf:
       nodes:
         dc1-leaf03:
           id: 7
+          platform: vEOS-lab
           mgmt_ip: 10.30.30.105/24
           uplink_switches: []
           uplink_switch_interfaces: []
