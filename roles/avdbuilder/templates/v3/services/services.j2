@@ -31,6 +31,8 @@ tenants:
 {%             if vrf.cf_mlag_ibgp_peering_vlan is defined and vrf.cf_mlag_ibgp_peering_vlan != "" and vrf.cf_mlag_ibgp_peering_vlan is not none %}
         mlag_ibgp_peering_vlan: {{ vrf.cf_mlag_ibgp_peering_vlan }}
 {%             endif %}
+{%         else %}
+        enable_mlag_ibgp_peering_vrfs: false
 {%         endif %}
 {#      Building SVIs #}
         svis:
