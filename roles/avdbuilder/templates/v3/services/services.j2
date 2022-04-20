@@ -38,7 +38,7 @@ tenants:
 {%                     if ip.type == "ANYCAST" %}
             ip_address_virtual: {{ ip.address }}
 {%                     elif ip.type == "VIP" %}
-            ip_virtual_router_address: {{ ip.address.split("/")[0] }}
+            ip_virtual_router_addresses: [ {{ ip.address.split("/")[0] }} ]
 {%                     elif ip.type == "SECONDARY" %}
 {%                         do service_nodes.ips.append(ip) %}
 {%                     endif %}
