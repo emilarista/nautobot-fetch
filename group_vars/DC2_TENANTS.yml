@@ -43,6 +43,7 @@ tenants:
             name: Test_static_route
       A_DB:
         vrf_id: 11
+        enable_mlag_ibgp_peering_vrfs: false
         svis:
           20:
             enabled: true
@@ -58,6 +59,7 @@ tenants:
         vrf_id: 12
         ospf:
           enabled: true
+        enable_mlag_ibgp_peering_vrfs: false
         svis:
           30:
             enabled: true
@@ -94,6 +96,7 @@ tenants:
     vrfs:
       B_APP:
         vrf_id: 20
+        enable_mlag_ibgp_peering_vrfs: false
         svis:
           40:
             enabled: true
@@ -107,6 +110,7 @@ tenants:
         static_routes:
       B_DB:
         vrf_id: 21
+        enable_mlag_ibgp_peering_vrfs: false
         svis:
           50:
             enabled: true
@@ -127,6 +131,7 @@ tenants:
         static_routes:
       B_WEB:
         vrf_id: 22
+        enable_mlag_ibgp_peering_vrfs: false
         svis:
           60:
             enabled: true
