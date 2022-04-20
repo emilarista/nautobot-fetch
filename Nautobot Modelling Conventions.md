@@ -5,18 +5,13 @@ The following conventions are used to model data in nautobot to be consumed by t
 
 Document conventions:
 
-
-
 * MUST is used to denote a mandatory practice, without which the ansible logic will break.
 * SHOULD is used to denote a non-mandatory, but encouraged practice.
 * EXACTLY is used to emphasize the importance of subjects like capitalization and naming schemes.
 
-
 # 1. Custom Fields
 
 A number of custom fields are used by the ansible roles, which MUST be present in the nautobot application. These are:
-
-
 
 * base_vni
     * Type: Integer
@@ -85,7 +80,16 @@ A number of custom fields are used by the ansible roles, which MUST be present i
         * on
         * off
     * Default Value (Optional): off
-
+* mlag_ibgp_peering
+    * Type: boolean
+    * Name: mlag_ibgp_peering
+    * Object(s): ipam > vrf
+    * Suggested Values: true if MLAG iBGP peering VLANs are desired, otherwise False.
+* mlag_ibgp_peering_vlan
+    * Type: integer
+    * Name: mlag_ibgp_peering_vlan
+    * Object(s): ipam > vrf
+    * Suggested values: Desired VLAN number for MLAG iBGP peering connection, only used if mlag_ibgp_peering is turned on for the VRF.
 
 # 2. Device Type:
 
@@ -156,10 +160,10 @@ The only mandatory tag that is in use by the ansible logic MUST have the name â€
 
 The following optional tags can be used with the ansible logic:
 
-* uplink
+* uplink - populates l3eaf uplink_interfaces
     * Name: uplink
     * Slug: uplink
-* peerlink
+* peerlink - populates l3eaf mlag_interfaces
     * Name: peerlink
     * Slug: peerlink
 * dci-link
@@ -231,6 +235,15 @@ The following fields MUST be populated with accurate data:
 Device Ethernet Interfaces SHOULD be populated from the Device Type object association and otherwise follow the same requirements.
 
 ##### 7.1.1.1.1 Uplink/Peerlink Tagging
+
+Interfaces can be tagged with the "uplink" and "peerlink" nautobot tags. This will populate the following AVD data model:
+
+```yaml
+l3leaf:
+  <node group>:
+    <node>:
+      uplink_interfaces:
+```
 
 #### 7.1.1.2 Management Interface
 

@@ -49,6 +49,8 @@
           }
         }
       }
+      cf_mlag_ibgp_peering
+      cf_mlag_ibgp_peering_vlan
       cf_ospf_enabled
       name
       tags {
