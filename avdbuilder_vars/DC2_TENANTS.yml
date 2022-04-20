@@ -15,6 +15,8 @@ tenants:
         vrf_id: 10
         ospf:
           enabled: true
+        enable_mlag_ibgp_peering_vrfs: true
+        mlag_ibgp_peering_vlan: 2784
         svis:
           10:
             enabled: true
@@ -67,7 +69,7 @@ tenants:
           56:
             enabled: true
             name: peering_vlan
-            ip_virtual_router_address: 10.0.56.1
+            ip_virtual_router_addresses: [ 10.0.56.1 ]
             nodes:
               dc1-borderleaf1a:
                 ip_address: 10.0.56.2/24
