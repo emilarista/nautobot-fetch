@@ -25,6 +25,13 @@ tenants:
         ospf:
           enabled: true
 {%         endif %}
+{#      MLAG iBGP peering VLANs #}
+{%         if vrf.cf_mlag_ibgp_peering is defined and vrf.cf_mlag_ibgp_peering == true %}
+        enable_mlag_ibgp_peering_vrfs: true
+{%             if vrf.cf_mlag_ibgp_peering_vlan is defined and vrf.cf_mlag_ibgp_peering_vlan != "" and vrf.cf_mlag_ibgp_peering_vlan is not none %}
+        mlag_ibgp_peering_vlan: {{ vrf.cf_mlag_ibgp_peering_vlan }}
+{%             endif %}
+{%         endif %}
 {#      Building SVIs #}
         svis:
 {%         for svi in vrf.svis %}
