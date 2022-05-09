@@ -477,10 +477,11 @@ For a L2 single-connected endpoint such as a standalone server, choose an interf
 
 ### 15.1.1 Yaml Connection Naming
 
+The naming of endpoint connections determine the port descriptions in the rendered configuration.
 The naming of endpoint connections in the resulting yaml files (rendered AVD data model) will use the following priority order:
 
 1. If the interface is connected to another device interface in nautobot, the connected device and interface will be used for the connection name in the resulting yaml files (rendered AVD data model).
-2. If the interface is not connected to another device in nautobot, the interface label will be used to construct the connection name. Be aware that connection names MUST be unique.
+2. If the interface is not connected to another device in nautobot, the interface description or label will be used to construct the connection name. Be aware that connection names MUST be unique.
 3. If none of the above options are used, the connection name will simply be constructed from the leaf name and the leaf interface name in order to have a unique connection name.
 
 ## 15.2 L2 Dual-homed Non-MLAG Connection
@@ -489,7 +490,7 @@ This type of connection may be utilized when a dual-homed connection without lin
 
 This connection is modeled exactly like an L2 single-connected endpoint described in the previous section, the only difference being that instead of modeling a single leaf/interface, an interface on both members of a leaf pair is chosen and configured according to the steps outlined in section 15.1.
 
-**Note:** This connection will be virtually indistinguishable from two separate single-connected interfaces. Use of the label field for naming these connections is strongly recommended to identify them as belonging to the same connected endpoint.
+**Note:** This connection will be virtually indistinguishable from two separate single-connected interfaces. Connecting these interfaces in nautobot or using the label or description fields for naming these connections is strongly recommended to identify them as belonging to the same connected endpoint.
 
 ## 15.3 L2 MLAG Connection
 
@@ -509,8 +510,10 @@ For MLAG connections, the following parameters are relevant:
 
 The naming of endpoint connections in the resulting yaml files (rendered AVD data model) will use the following priority order:
 
-1. Primarily the interface label will be used to construct the connection name. Be aware that connection names MUST be unique. Since it is not possible to connect a LAG group type interface to another interface in nautobot, use of the label to describe the connection is strongly recommended.
-2. If the label is not used, the connection name will simply be constructed from the leaf name and the leaf interface name in order to have a unique connection name.
+1. Primarily the connected interface/device of the port channel member interfaces will be used for the interface description. If any description is defined in nautobot, this will be appended to the endpoint description in the rendered configuration.
+2. If any label is provided in nautobot, the will be appended to the endpoint name.
+3. If the member ports are not connected to any device in nautobot, the description in nautobot will be used to define the endpoint name.
+4. If a description is not present, the connection name will simply be constructed from the leaf name and the leaf interface name in order to have a unique connection name.
 
 ## 15.4 L2 non-MLAG LACP Connection
 
@@ -531,8 +534,10 @@ This type of connection is a single-homed port-channel for connecting an endpoin
 
 The naming of endpoint connections in the resulting yaml files (rendered AVD data model) will use the following priority order:
 
-1. Primarily the interface label will be used to construct the connection name. Be aware that connection names MUST be unique. Since it is not possible to connect a LAG group type interface to another interface/device in nautobot, use of the label to describe the connection is strongly recommended.
-2. If the label is not used, the connection name will simply be constructed from the leaf name and the leaf interface name in order to have a unique connection name.
+1. Primarily the connected interface/device of the port channel member interfaces will be used for the interface description. If any description is defined in nautobot, this will be appended to the endpoint description in the rendered configuration.
+2. If any label is provided in nautobot, the will be appended to the endpoint name.
+3. If the member ports are not connected to any device in nautobot, the description in nautobot will be used to define the endpoint name.
+4. If a description is not present, the connection name will simply be constructed from the leaf name and the leaf interface name in order to have a unique connection name.
 
 **Note:** If two identically named/numbered single-homed LACP connections are added to two switches in the same virtual chassis, using the nautobot GUI to choose which ports to add to which LAG group will be tricky since there will appear 2 LAG groups with the same name. In this case it is suggested to number the LAG groups differently for the 2 different switches, for example appending 01 to the LAG group belonging to the first switch in the virtual chassis and 02 to the second. The numbering scheme is completely arbitrary and up the the user, and is only relevant from a GUI ease-of-use perspective. It will not affect port-channel numbering in AVD (eos_designs).
 
