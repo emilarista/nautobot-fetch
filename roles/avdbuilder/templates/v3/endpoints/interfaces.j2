@@ -12,7 +12,7 @@
 {%             if interface.connected_interface == none %}
 {# the true variable sent to default filter should make it render the default if main variable is defined but empty... let's see... #}
 {%                 if interface.description is defined and interface.description != "" %}
-{%                     set connection_data.name = interface.description %}
+{%                     set connection_data.name = interface.description | replace(" ","_") %}
 {%                 else %}
 {%                     set connection_data.name = interface.label | default(device.name ~ "_" ~ interface.name, true) %}
 {%                 endif %}

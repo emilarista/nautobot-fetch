@@ -25,7 +25,7 @@
 {%             endfor %}
 {%             set connection_data.adapter = {"switch_ports": switch_ports, "switches": switches, "endpoint_ports": endpoint_ports, "port_channel": {"mode": "active"}} %}
 {%             if interface.description is defined and interface.description != "" %}
-{%                 do connection_data.adapter.port_channel.update({"description": interface.description})%}
+{%                 do connection_data.adapter.port_channel.update({"description": interface.description | replace(" ","_")}) %}
 {%             endif %}
 {%             if connection_data.connected_device is defined and connection_data.connected_device is not none %}
 {%                 set connection_data.name = connection_data.connected_device %}
@@ -33,7 +33,7 @@
 {%                     set connection_data.name = connection_data.name ~ "_" ~ interface.label %}
 {%                 endif %}
 {%             elif interface.connected_interface == none %}
-{%                 set connection_data.name = interface.description | default(device.name ~ "_" ~ interface.name, true) %}
+{%                 set connection_data.name = interface.description | default(device.name ~ "_" ~ interface.name, true) | replace(" ","_") %}
 {%             else %}
 {%                 set connection_data.name = interface.connected_interface.device.name ~ "_" ~ interface.connected_interface.name %}
 {%             endif %}
