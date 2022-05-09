@@ -11,10 +11,17 @@
 {%             set connection_data.adapter = {"switch_ports": [interface.name], "switches": [device.name], "endpoint_ports": []} %}
 {%             if interface.connected_interface == none %}
 {# the true variable sent to default filter should make it render the default if main variable is defined but empty... let's see... #}
-{%                 set connection_data.name = interface.label | default(device.name ~ "_" ~ interface.name, true) %}
+{%                 if interface.description is defined and interface.description != "" %}
+{%                     set connection_data.name = interface.description %}
+{%                 else %}
+{%                     set connection_data.name = interface.label | default(device.name ~ "_" ~ interface.name, true) %}
+{%                 endif %}
 {%                 do connection_data.adapter.endpoint_ports.append("Eth0") %}
 {%             else %}
 {%                 set connection_data.name = interface.connected_interface.device.name ~ "_" ~ interface.connected_interface.name %}
+{%                 if interface.label is defined and interface.label != "" %}
+{%                     set connection_data.name = connection_data.name ~ "_" ~ interface.label %}
+{%                 endif %}
 {%                 do connection_data.adapter.endpoint_ports.append(interface.connected_interface.name) %}
 {%             endif %}
 {#             trunk ports #}

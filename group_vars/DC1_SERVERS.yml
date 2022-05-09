@@ -48,7 +48,7 @@ servers:
         switches:
         - dc1-leaf01b
 
-  dc1-leaf03_Ethernet6:
+  Taken_from_description:
     rack: B1
     adapters:
       - endpoint_ports:
@@ -83,6 +83,7 @@ servers:
         mode: trunk
         native_vlan: '11'
         port_channel:
+          description: Some description from NB
           mode: active
         switch_ports:
         - Ethernet3
@@ -94,7 +95,7 @@ servers:
 
 
 # MLAG Connections
-  dc1-borderleaf1a_mlag8:
+  ESXI2_PROD:
     rack: 
     adapters:
       - endpoint_ports:
@@ -103,6 +104,7 @@ servers:
         mode: trunk
         native_vlan: '30'
         port_channel:
+          description: Epic description
           mode: active
         speed: 10G
         switch_ports:

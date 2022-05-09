@@ -14,16 +14,25 @@
 {%             for member in interface.member_interfaces %}
 {%                 do switch_ports.append(member.name) %}
 {%                 do switches.append(member.device.name) %}
-{%                 if interface.connected_interface is not none %}
+{%                 if member.connected_interface is not none %}
 {#                     Logic not implemented #}
 {# {%                     do endpoint_ports.append(interface.connected_interfaces[loop.index0].name ) %} #}
 {%                     do endpoint_ports.append("Eth" ~ loop.index0) %}
+{%                     set connection_data.connected_device = member.connected_interface.device.name | default(none) %}
 {%                 else %}
 {%                     do endpoint_ports.append("Eth" ~ loop.index0) %}
 {%                 endif %}
 {%             endfor %}
 {%             set connection_data.adapter = {"switch_ports": switch_ports, "switches": switches, "endpoint_ports": endpoint_ports, "port_channel": {"mode": "active"}} %}
-{%             if interface.connected_interface == none %}
+{%             if interface.description is defined and interface.description != "" %}
+{%                 do connection_data.adapter.port_channel.update({"description": interface.description})%}
+{%             endif %}
+{%             if connection_data.connected_device is defined and connection_data.connected_device is not none %}
+{%                 set connection_data.name = connection_data.connected_device %}
+{%                 if interface.label is defined and interface.label != "" %}
+{%                     set connection_data.name = connection_data.name ~ "_" ~ interface.label %}
+{%                 endif %}
+{%             elif interface.connected_interface == none %}
 {# the true variable sent to default filter should make it render the default if main variable is defined but empty... let's see... #}
 {%                 set connection_data.name = interface.label | default(device.name ~ "_" ~ interface.name, true) %}
 {%             else %}
