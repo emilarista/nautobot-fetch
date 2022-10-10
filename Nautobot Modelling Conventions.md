@@ -90,7 +90,11 @@ A number of custom fields are used by the ansible roles, which MUST be present i
     * Name: mlag_ibgp_peering_vlan
     * Object(s): ipam > vrf
     * Suggested values: Desired VLAN number for MLAG iBGP peering connection, only used if mlag_ibgp_peering is turned on for the VRF.
-
+* local_as:
+    * Type: Text
+    * Name: local_as
+    * Object(s): dcim > device
+    * Suggested Values: Changed local asn number on the peering inside a vrf.
 # 2. Device Type:
 
 For each switch in the AVD fabric, a corresponding **Device Type** object MUST be created in Nautobot. The device type is a representation of the hardware device model of the switch.
