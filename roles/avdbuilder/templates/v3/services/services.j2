@@ -119,7 +119,7 @@ tenants:
             local_as: {{ services_data.fabric_local_as }}
 {%                             endif %}
 {%                             if ip_address.interface.device.cf_local_as is defined and ip_address.interface.device.cf_local_as_in is not none %}
-			local_as: {{ ip_address.interface.device.cf_local_as }}
+            local_as: {{ ip_address.interface.device.cf_local_as }}
 {%                             endif %}
 {%                             if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not none %}
             route_map_in: {{ ip_address.interface.device.cf_route_map_in }}
