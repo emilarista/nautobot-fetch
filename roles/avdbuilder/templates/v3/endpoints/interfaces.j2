@@ -2,7 +2,7 @@
 {% for device in endpoints_data.endpoint_devices %}
 {%     for interface in device.interfaces %}
 {#         Render non-LAG interfaces first #}
-{%         if "Ethernet" in interface.name | lower and interface.lag == none and interface.mode is not none %}
+{%         if "ethernet" in interface.name | lower and interface.lag == none and interface.mode is not none %}
 {%             set connection_data = namespace() %}
 {%             if device.rack is defined and device.rack is not none %}
 {%                 set connection_data.rack = device.rack.name %}
