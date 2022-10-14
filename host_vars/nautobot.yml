@@ -1,7 +1,7 @@
 avd_fabric_defaults:
   fabric_local_as: 150
   # copies any settings from here to top level fabric file.
-  fabric_name: ADVANIA_FABRIC
+  fabric_name: TEST_FABRIC
   custom_structured_configuration_ntp:
     local_interface:
       name: Management1
