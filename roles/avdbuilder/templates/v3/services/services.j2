@@ -43,7 +43,7 @@ tenants:
             enabled: true
             name: {{ svi.vlan.name }}
 {%                 if svi.vlan.cf_vxlan_enable is defined and svi.vlan.cf_vxlan_enable is false %}
-			      vxlan: false 
+            vxlan: false 
 {%                 endif %}
 {#          Building SVI IP-addressing #}
 {%                 for ip in svi.ip_addresses %}
