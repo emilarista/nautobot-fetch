@@ -124,11 +124,10 @@ tenants:
 {%                             if ip_address.interface.device.cf_local_as is defined and ip_address.interface.device.cf_local_as is not in [none, ""] %}
             local_as: {{ ip_address.interface.device.cf_local_as }}
 {%                             endif %}
-{%                             if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not in [none, ""] %}
-{%                             endif %}
 {%                             if ip_address.interface.device.cf_bfd is defined and ip_address.interface.device.cf_bfd is true %}
             bfd: true
 {%                             endif %}
+{%                             if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not in [none, ""] %}
             route_map_in: {{ ip_address.interface.device.cf_route_map_in }}
 {%                             endif %}
 {%                             if ip_address.interface.device.cf_route_map_out is defined and ip_address.interface.device.cf_route_map_out is not none %}
