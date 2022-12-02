@@ -1,10 +1,12 @@
 l3leaf:
-  defaults: {{ dc_data.l3leaf_defaults }}
+  defaults:
+    {{ dc_data.l3leaf_defaults | to_nice_yaml(indent=2) | indent(4) }}
   node_groups:
 {% for node_group in dc_data.l3leaf_mlag_pairs %}
 {%     if node_group.site.name == dc_data.site_name %}
     {{ node_group.name }}:
-      filter: {{ node_group.filter }}
+      filter:
+        {{ node_group.filter | to_nice_yaml(indent=2) | indent(8) }}
 {%         if node_group.bgp_as is defined and node_group.bgp_as is not none and node_group.bgp_as != "" %}
       bgp_as: {{ node_group.bgp_as }}
 {%         endif %}
