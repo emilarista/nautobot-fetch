@@ -1,5 +1,5 @@
 {
-  devices(cf_evpn_role: "client", tag: "avd", virtual_chassis_member: false) {
+  devices(cf_evpn_role: "client", tag: "avd", virtual_chassis_member: false, status: "active") {
     name
     status {
       name

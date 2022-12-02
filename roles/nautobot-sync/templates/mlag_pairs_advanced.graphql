@@ -1,0 +1,117 @@
+{
+  l3leaf_mlag_pairs: virtual_chassis(tag: "avd") {
+    name
+    cf_bgp_asn
+    cf_evpn_role
+    members(status: "active", role: "l3leaf") {
+      name
+      device_type {
+        model
+      }
+      device_role {
+        name
+      }
+      rack {
+        name
+      }
+      primary_ip4 {
+        address
+      }
+      cf_device_id
+      cf_evpn_role
+      cf_bgp_asn
+      site {
+        name
+      }
+      uplinks: interfaces(tag: "uplink") {
+        name
+        connected_interface {
+          device {
+            name
+          }
+        }
+      }
+      peerlinks: interfaces(tag: "peerlink") {
+        name
+      }
+      trunks: interfaces(enabled: true, mode: "tagged", type__n: "virtual") {
+        name
+        description
+        member_interfaces {
+          name
+          device {
+            name
+          }
+        }
+        untagged_vlan {
+          vid
+        }
+        tagged_vlans {
+          vid
+        }
+        cf_raw_eos_cli
+        lag {
+          name
+        }
+        mtu
+        type
+        connected_interface {
+          device {
+            name
+          }
+          name
+        }
+      }
+      access_ports: interfaces(enabled: true, mode: "access", type__n: "virtual") {
+        name
+        description
+        member_interfaces {
+          name
+          device {
+            name
+          }
+        }
+        untagged_vlan {
+          vid
+        }
+        cf_raw_eos_cli
+        lag {
+          name
+        }
+        mtu
+        type
+        connected_interface {
+          device {
+            name
+          }
+          name
+        }
+      }
+      trunks_all: interfaces(enabled: true, mode: "tagged-all", type__n: "virtual") {
+        name
+        description
+        member_interfaces {
+          name
+          device {
+            name
+          }
+        }
+        untagged_vlan {
+          vid
+        }
+        cf_raw_eos_cli
+        lag {
+          name
+        }
+        mtu
+        type
+        connected_interface {
+          device {
+            name
+          }
+          name
+        }
+      }
+    }
+  }
+}

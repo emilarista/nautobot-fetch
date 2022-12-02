@@ -1,5 +1,5 @@
 query{
-  devices(role:"spine", tag: "avd") {
+  devices(role:"spine", tag: "avd", status: "active") {
     name
     status {
       name
