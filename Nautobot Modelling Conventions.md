@@ -99,8 +99,15 @@ A number of custom fields are used by the ansible roles, which MUST be present i
     * Type: boolean
     * Name: vxlan_enable
     * Object(s): IPAM > vlan
-    * defaul value : true
+    * default value : true
     * Suggested Values: If set to false this value will not enable EVPN L2 services for that particular vlan( svis will be created commonly used for pure L3 services)
+* bfd:
+    * Type: boolean
+    * Name: bfd
+    * Object(s): dcim > device
+    * default value : true
+    * Suggested Values: If set to false this value will not enable BFD for that particular neighbor.
+
 # 2. Device Type:
 
 For each switch in the AVD fabric, a corresponding **Device Type** object MUST be created in Nautobot. The device type is a representation of the hardware device model of the switch.
