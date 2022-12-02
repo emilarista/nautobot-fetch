@@ -9,20 +9,24 @@ l3leaf:
       bgp_as: {{ node_group.bgp_as }}
 {%         endif %}
       evpn_role: {{ node_group.cf_evpn_role }}
-      evpn_route_servers: {{ node_group.evpn_route_servers | default([]) }}
+{%         if node_group.evpn_route_servers | length > 0 %}
+      evpn_route_servers: {{ node_group.evpn_route_servers }}
+{%         endif %}
       nodes:
 {%        for node in node_group.members %}
         {{ node.name }}:
           id: {{ node.cf_device_id }}
           platform: {{ node.device_type.model }}
           mgmt_ip: {{ node.primary_ip4.address }}
-{%            if node.uplink_switches is defined and node.uplink_switches is not none %}
+{%            if node.uplink_switches | length > 0 %}
           uplink_switches: {{ node.uplink_switches }}
 {%            endif %}
 {%            if node.bgp_as is defined and node.bgp_as is not none %}
           bgp_as: {{ node.bgp_as }}
 {%            endif %}
+{%            if node.uplink_switch_interfaces | length > 0 %}
           uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
+{%            endif %}
 {%        endfor %}
 {%     endif %}
 {% endfor %}
