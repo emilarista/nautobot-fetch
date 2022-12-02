@@ -118,13 +118,13 @@ tenants:
 {# Implement logic to loop through svis and find the virtual router address to set the nexthop #}
 {# test: {{ ["192.168.0.7/24"] | ipaddr("host/prefix") | ipaddr("subnet") | ipaddr("1") }} #}
 {# implement local_as knob. #}
-{%                             if services_data.fabric_local_as is defined and services_data.fabric_local_as is not none %}
+{%                             if services_data.fabric_local_as is defined and services_data.fabric_local_as is not in [none, ""] %}
             local_as: {{ services_data.fabric_local_as }}
 {%                             endif %}
-{%                             if ip_address.interface.device.cf_local_as is defined and ip_address.interface.device.cf_local_as is not none %}
+{%                             if ip_address.interface.device.cf_local_as is defined and ip_address.interface.device.cf_local_as is not in [none, ""] %}
             local_as: {{ ip_address.interface.device.cf_local_as }}
 {%                             endif %}
-{%                             if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not none %}
+{%                             if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not in [none, ""] %}
             route_map_in: {{ ip_address.interface.device.cf_route_map_in }}
 {%                             endif %}
 {%                             if ip_address.interface.device.cf_route_map_out is defined and ip_address.interface.device.cf_route_map_out is not none %}
