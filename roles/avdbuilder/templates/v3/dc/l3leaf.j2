@@ -32,6 +32,9 @@ l3leaf:
 {%            if node.uplink_interfaces | length > 0 %}
           uplink_interfaces: {{ node.uplink_interfaces }}
 {%            endif %}
+{%            if node.mlag_interfaces | length > 0 %}
+          mlag_interfaces: {{ node.mlag_interfaces }}
+{%            endif %}
 {%        endfor %}
 {%     endif %}
 {% endfor %}
