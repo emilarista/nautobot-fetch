@@ -29,6 +29,18 @@
       site {
         name
       }
+      uplinks: interfaces (tag: "uplink") {
+        name
+        connected_interface {
+          name
+          device {
+            name
+          }
+        }
+      }
+      peerlinks: interfaces (tag: "peerlink") {
+        name
+      }
       interfaces {
         name
         description

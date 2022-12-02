@@ -2,7 +2,7 @@
 ######### Retrieve MLAG Pairs from Nautobot ###############
 - name: Get nautobot mlag pairs
   uri:
-    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
     validate_certs: no
     method: POST
     timeout: 120
@@ -28,7 +28,7 @@
 ######### Retrieve Standalone Leafs from Nautobot #########
 - name: Get nautobot standalone leafs
   uri:
-    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
     validate_certs: no
     method: POST
     timeout: 120
@@ -54,7 +54,7 @@
 ######### Retrieve Spines from Nautobot ###################
 - name: Get nautobot spines
   uri:
-    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
     validate_certs: no
     method: POST
     timeout: 120
@@ -80,7 +80,7 @@
 ######### Retrieve Sites list from Nautobot ###############
 - name: Get nautobot sites list
   uri:
-    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
     validate_certs: no
     method: POST
     timeout: 120
@@ -106,7 +106,7 @@
 ######### Retrieve EPVN Route-servers from Nautobot #######
 - name: Get nautobot evpn route-servers list
   uri:
-    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
     validate_certs: no
     method: POST
     timeout: 120
@@ -132,7 +132,7 @@
 ######### Retrieve Network Services from Nautobot #########
 - name: Get nautobot network services info
   uri:
-    url: "http://{{ ansible_host }}:8080/api/graphql/"
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
     validate_certs: no
     method: POST
     timeout: 120
@@ -156,7 +156,7 @@
 
 - name: Obtain list of config contexts from Nautobot
   set_fact:
-    nb_config_contexts: "{{ query('networktocode.nautobot.lookup', 'config-contexts', api_endpoint='http://' ~ ansible_host ~ ':8080/', token=api_token) }}"
+    nb_config_contexts: "{{ query('networktocode.nautobot.lookup', 'config-contexts', api_endpoint='http://' ~ ansible_host ~ ':' ~ nautobot_api_port ~ '/', token=api_token) }}"
   delegate_to: localhost
   tags:
     - always
