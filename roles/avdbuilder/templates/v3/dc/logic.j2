@@ -43,6 +43,7 @@
 {%     do mlag_pair.update({"bgp_as": mlag_pair_bgp_as}) %}
 {%     for device in mlag_pair.members %}
 {%         do mlag_pair.update({"site": {"name": device.site.name}}) %}
+{#             add some logic for future use #}
 {%             set nb_uplinks = device.uplinks | map(attribute = "name") | default([]) %}
 {%             set nb_peerlinks = device.peerlinks | map(attribute = "name") | default([]) %}
 {%             set device_ul_switch_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
