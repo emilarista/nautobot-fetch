@@ -107,6 +107,12 @@ A number of custom fields are used by the ansible roles, which MUST be present i
     * Object(s): dcim > device
     * default value : true
     * Suggested Values: If set to false this value will not enable BFD for that particular neighbor.
+ * is_default_route:
+    * Type: boolean
+    * Name: bfd
+    * Object(s): ipam > IP address
+    * default value : null
+    * Suggested Values: This custom field is to circumvent to create a 0.0.0.0/1 and a 0.0.0.0/128 in Nautobot with a nexthop.
 
 # 2. Device Type:
 
