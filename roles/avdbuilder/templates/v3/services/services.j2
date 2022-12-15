@@ -193,15 +193,19 @@ tenants:
         static_routes:
 {%         for prefix in prefixes %}
 {# test: {{ "2asd" | ipaddr }} #}
-{%             if (prefix.role.name is defined and prefix.role.name == "static_route") and (prefix.cf_next_hop is defined and prefix.cf_next_hop | ipaddr) %}
+{%             if (prefix.role.name is defined and prefix.role.name == "static_route") and (prefix.cf_next_hop is defined and prefix.cf_next_hop) %}
           - destination_address_prefix: {{ prefix.prefix }}
             gateway: {{ prefix.cf_next_hop }}
 {%                 if prefix.description != "" %}
             name: {{ prefix.description | replace(" ", "_") }}
 {%                 endif %}
 {%             endif %}
-{%         endfor %}
+{%           endfor %}
+{%         for ip_address in vrf.ip_addresses %}
+{%           if ip_address.interface is defined and ip_address.interface is not none and ip_address.cf_is_default_route is true %}
+          - destination_address_prefix: 0.0.0.0/0
+            gateway: {{ ip_address.address.split("/")[0] }}
+{%               endif %}
+{%           endfor %}
 {%     endfor %}
 {% endfor %}
-{# {{ services_data.tenants | to_nice_yaml(indent = 2) }} #}
-{# {{ services_data.tenant_devices | to_nice_yaml(indent = 2) }} #}
