@@ -28,6 +28,7 @@
       ip_addresses {
         role
         address
+        cf_is_default_route
         interface {
           cf_raw_eos_cli
           cf_ospf_enabled
