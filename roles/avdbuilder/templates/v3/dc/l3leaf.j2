@@ -29,6 +29,9 @@ l3leaf:
 {%            if node.uplink_switch_interfaces | length > 0 %}
           uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
 {%            endif %}
+{%            if node.uplink_interfaces | length > 0 %}
+          uplink_interfaces: {{ node.uplink_interfaces }}
+{%            endif %}
 {%        endfor %}
 {%     endif %}
 {% endfor %}
