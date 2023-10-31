@@ -1,0 +1,77 @@
+# Non-MLAG Port-Channel Connections
+{% for device in endpoints_data.endpoint_devices %}
+{%     for interface in device.interfaces %}
+{#         Render non-LAG interfaces first #}
+{%         if "port-channel" in interface.name | lower and interface.member_interfaces is not none and interface.mode is not none %}
+{%             set connection_data = namespace() %}
+{%             if device.rack is defined and device.rack is not none %}
+{%                 set connection_data.rack = device.rack.name %}
+{%             endif %}
+{#             Initialize the adapter #}
+{%             set switch_ports = [] %}
+{%             set switches = [] %}
+{%             set endpoint_ports = [] %}
+{%             for member in interface.member_interfaces %}
+{%                 do switch_ports.append(member.name) %}
+{%                 do switches.append(member.device.name) %}
+{%                 if member.connected_interface is not none %}
+{#                     Logic not implemented #}
+{# {%                     do endpoint_ports.append(interface.connected_interfaces[loop.index0].name ) %} #}
+{%                     do endpoint_ports.append("Eth" ~ loop.index0) %}
+{%                     set connection_data.connected_device = member.connected_interface.device.name | default(none) %}
+{%                 else %}
+{%                     do endpoint_ports.append("Eth" ~ loop.index0) %}
+{%                 endif %}
+{%             endfor %}
+{%             set connection_data.adapter = {"switch_ports": switch_ports, "switches": switches, "endpoint_ports": endpoint_ports, "port_channel": {"mode": "active"}} %}
+{%             if interface.description is defined and interface.description != "" %}
+{%                 do connection_data.adapter.port_channel.update({"description": interface.description | replace(" ","_")}) %}
+{%             endif %}
+{%             if connection_data.connected_device is defined and connection_data.connected_device is not none %}
+{%                 set connection_data.name = connection_data.connected_device %}
+{%                 if interface.label is defined and interface.label != "" %}
+{%                     set connection_data.name = connection_data.name ~ "_" ~ interface.label %}
+{%                 endif %}
+{%             elif interface.connected_interface == none %}
+{%                 set connection_data.name = interface.description | default(device.name ~ "_" ~ interface.name, true) | replace(" ","_") %}
+{%             else %}
+{%                 set connection_data.name = interface.connected_interface.device.name ~ "_" ~ interface.connected_interface.name %}
+{%             endif %}
+{#             trunk ports #}
+{%             if "TAGGED" in interface.mode %}
+{%                 do connection_data.adapter.update({"mode": "trunk"}) %}
+{%                 if interface.untagged_vlan is not none %}
+{%                     do connection_data.adapter.update({"native_vlan": interface.untagged_vlan.vid | string }) %}
+{%                 endif %}
+{%                 if interface.mode != "TAGGED_ALL" and interface.tagged_vlans | length > 0 %}
+{%                     set adapter_vlans = [] %}
+{%                     for vlan in interface.tagged_vlans %}
+{%                         do adapter_vlans.append(vlan.vid) %}
+{%                     endfor %}
+{%                     if interface.untagged_vlan is defined and interface.untagged_vlan is not none and interface.untagged_vlan != "" %}
+{%                         do adapter_vlans.append(interface.untagged_vlan.vid) %}
+{%                     endif %}
+{%                     do connection_data.adapter.update({"vlans": adapter_vlans | unique | join(",")}) %}
+{%                 endif %}
+{%             elif interface.mode == "ACCESS" %}
+{%                 do connection_data.adapter.update({"mode": "access"}) %}
+{%                 if interface.untagged_vlan is not none %}
+{%                     do connection_data.adapter.update({"vlans": interface.untagged_vlan.vid | string }) %}
+{%                 endif %}
+{%             endif %}
+{#             EOS_CLI #}
+{%             if interface.cf_raw_eos_cli != "" and interface.cf_raw_eos_cli is not none %}
+{%                 set eos_cli = interface.cf_raw_eos_cli.split(",") | join("\n") %}
+{%                 do connection_data.adapter.port_channel.update({"raw_eos_cli": eos_cli})%}
+{%             endif %}
+{#             Speed #}
+{%             if interface.cf_speed is defined and interface.cf_speed != "" and interface.cf_speed is not none %}
+{%                 do connection_data.adapter.update({"speed": interface.cf_speed})%}
+{%             endif %}
+  - name: {{ connection_data.name }}
+    rack: {{ connection_data.rack | default("") }}
+    adapters:
+      - {{ connection_data.adapter | to_nice_yaml(indent=2, width=1337) | indent(8) }}
+{%         endif %}
+{%     endfor %}
+{% endfor %}

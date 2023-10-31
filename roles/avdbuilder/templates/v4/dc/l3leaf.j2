@@ -1,0 +1,55 @@
+l3leaf:
+  defaults:
+    {{ dc_data.l3leaf_defaults | to_nice_yaml(indent=2) | indent(4) }}
+  node_groups:
+{% for node_group in dc_data.l3leaf_mlag_pairs %}
+{%     if node_group.site.name == dc_data.site_name %}
+    - group: {{ node_group.name }}
+      filter:
+        {{ node_group.filter | to_nice_yaml(indent=2) | indent(8) }}
+{%         if node_group.bgp_as is defined and node_group.bgp_as is not none and node_group.bgp_as != "" %}
+      bgp_as: {{ node_group.bgp_as }}
+{%         endif %}
+      evpn_role: {{ node_group.cf_evpn_role }}
+{%         if node_group.evpn_route_servers | length > 0 %}
+      evpn_route_servers: {{ node_group.evpn_route_servers }}
+{%         endif %}
+      nodes:
+{%        for node in node_group.members %}
+        - name: {{ node.name }}
+          id: {{ node.cf_device_id }}
+          platform: {{ node.device_type.model }}
+          mgmt_ip: {{ node.primary_ip4.address }}
+{%            if node.uplink_switches | length > 0 %}
+          uplink_switches: {{ node.uplink_switches }}
+{%            endif %}
+{%            if node.bgp_as is defined and node.bgp_as is not none %}
+          bgp_as: {{ node.bgp_as }}
+{%            endif %}
+{%            if node.uplink_switch_interfaces | length > 0 %}
+          uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
+{%            endif %}
+{%            if node.uplink_interfaces | length > 0 %}
+          uplink_interfaces: {{ node.uplink_interfaces }}
+{%            endif %}
+{%        endfor %}
+{%     endif %}
+{% endfor %}
+{% for leaf in dc_data.standalone_leafs %}
+{%     if leaf.site.name == dc_data.site_name %}
+    - name: {{ leaf.name }}
+      filter: {{ leaf.filter }}
+      bgp_as: {{ leaf.cf_bgp_asn }}
+      evpn_role: {{ leaf.cf_evpn_role }}
+      evpn_route_servers: {{ leaf.evpn_route_servers | default([]) }}
+      nodes:
+        {{ leaf.name }}:
+          id: {{ leaf.cf_device_id }}
+          platform: {{ leaf.device_type.model }}
+          mgmt_ip: {{ leaf.primary_ip4.address }}
+{%         if leaf.uplink_switches is defined and leaf.uplink_switches is not none %}
+          uplink_switches: {{ leaf.uplink_switches }}
+{%         endif %}
+          uplink_switch_interfaces: {{ leaf.uplink_switch_interfaces }}
+{%     endif %}
+{% endfor %}
