@@ -1,0 +1,8 @@
+{# Render DC Name from site name #}
+dc_name: {{ dc_data.site_name }}
+
+{% if dc_data.dc_defaults is defined and dc_data.dc_defaults is not none %}
+{%     for item in dc_data.dc_defaults %}
+{{ item }}: {{ dc_data.dc_defaults[item] }}
+{%     endfor %}
+{% endif %}
