@@ -6,7 +6,7 @@ tenants:
     l2vlans:
 {%     for l2vlan in tenant.l2vlans %}
 {%         if ((l2vlan.site.name is defined and (l2vlan.site.name == services_data.site_name or l2vlan.site.name == "Global")) or l2vlan.site == none) and l2vlan.status.name == "Active" %}
-      {{ l2vlan.vid }}:
+      - id: {{ l2vlan.vid }}
         name: {{ l2vlan.name }}
 {%             set service_tags = [] %}
 {%             for tag in l2vlan.tags %}
