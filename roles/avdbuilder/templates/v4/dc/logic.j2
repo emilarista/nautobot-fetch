@@ -56,7 +56,7 @@
 {%             do device.update({"bgp_as": device_bgp_as}) %}
 {# need to build uplink_switch_interfaces for l3leaf defaults, set thelist = [] for item in uplink_switches thelist.append("Ethernet"~"id"/1) #}
 {%     endfor %}
-{%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ "all" ]}}) %}
+{%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ dc_data.site_name, "global" ]}}) %}
 {%     if mlag_pair.cf_evpn_role == "client" %}
 {%         do mlag_pair.update({"evpn_route_servers": dc_data.l3leaf_route_servers}) %}
 {%     elif mlag_pair.cf_evpn_role == "server" %}
