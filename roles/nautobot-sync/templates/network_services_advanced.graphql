@@ -74,6 +74,7 @@
           cf_ospf_enabled
           cf_ip_helpers
           cf_mtu
+          cf_vxlan_enable
           name
           status {
             name
