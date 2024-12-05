@@ -41,6 +41,8 @@
             cf_route_map_out
             cf_bgp_password
             cf_default_originate
+            cf_local_as
+            cf_bfd
             device_role {
               name
             }
