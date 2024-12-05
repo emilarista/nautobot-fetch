@@ -28,6 +28,7 @@
       ip_addresses(status: "active") {
         role
         address
+        cf_is_default_route
         interface {
           cf_raw_eos_cli
           cf_ospf_enabled
@@ -70,6 +71,7 @@
         vlan {
           cf_ospf_enabled
           cf_ip_helpers
+          cf_mtu
           name
           status {
             name
