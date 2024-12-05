@@ -5,6 +5,9 @@
     l2vlans: vlans(tag: "avd", status: "active") {
       name
       vid
+      status {
+        name
+      }
       tags {
         name
       }
@@ -48,11 +51,17 @@
       }
       cf_ospf_enabled
       name
+      tags {
+        name
+      }
       vrf_vni: rd
       svis: prefixes(tag: "avd", status: "active") {
         prefix
         cf_next_hop
         description
+        status {
+          name
+        }
         role {
           name
         }
@@ -60,6 +69,9 @@
           cf_ospf_enabled
           cf_ip_helpers
           name
+          status {
+            name
+          }
           site {
             name
           }

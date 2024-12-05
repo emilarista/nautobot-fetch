@@ -140,7 +140,7 @@
       Authorization: 'Token {{ api_token }}'
     body_format: json
     body:
-      query: '{{ lookup("template", "roles/nautobot-sync/templates/network_services.graphql") }}'
+      query: '{{ lookup("template", "roles/nautobot-sync/templates/network_services_advanced.graphql") }}'
   register: nautobot_network_services_query
   run_once: true
   tags:

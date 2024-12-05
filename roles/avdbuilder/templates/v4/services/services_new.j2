@@ -1,0 +1,234 @@
+tenants:
+{% for tenant in services_data.tenants | emil.nbavd.structure_tenants %}
+  - name: {{ tenant.name }}
+    mac_vrf_vni_base: {{ tenant.mac_vrf_vni_base }}
+{#  Building l2vlans #}
+{%     if tenant.l2vlans | length > 0 %}
+    l2vlans:
+{%         for l2vlan in tenant.l2vlans %}
+{%             if ((l2vlan.site.name is defined and (l2vlan.site.name == services_data.site_name or l2vlan.site.name == "Global")) or l2vlan.site == none) and l2vlan.status.name == "Active" %}
+      - id: {{ l2vlan.vid }}
+        name: {{ l2vlan.name }}
+{%                 set service_tags = [] %}
+{%                 for tag in l2vlan.tags %}
+{%                     do service_tags.append(tag.name) %}
+{%                 endfor %}
+        tags: {{ service_tags }}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{#  Building vrfs #}
+{%     if tenant.vrfs | length > 0 %}
+    vrfs:
+{%         for vrf in tenant.vrfs %}
+      - name: {{ vrf.name }}
+        vrf_id: {{ vrf.vrf_vni }}
+{#      Building vrf ospf #}
+{%             if vrf.cf_ospf_enabled is defined and vrf.cf_ospf_enabled == true %}
+        ospf:
+          enabled: true
+{%             endif %}
+{#      MLAG iBGP peering VLANs #}
+{%             if vrf.cf_mlag_ibgp_peering is defined and vrf.cf_mlag_ibgp_peering == true %}
+        enable_mlag_ibgp_peering_vrfs: true
+{%                 if vrf.cf_mlag_ibgp_peering_vlan is defined and vrf.cf_mlag_ibgp_peering_vlan != "" and vrf.cf_mlag_ibgp_peering_vlan is not none %}
+        mlag_ibgp_peering_vlan: {{ vrf.cf_mlag_ibgp_peering_vlan }}
+{%                 endif %}
+{%             else %}
+        enable_mlag_ibgp_peering_vrfs: false
+{%             endif %}
+{#      Building SVIs #}
+{%             if vrf.svis | length > 0 %}
+        svis:
+{%                 for svi in vrf.svis %}
+{%                     set service_nodes = namespace(ips = []) %}
+{%                     if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
+          - id: {{ svi.vlan.vid }}
+            enabled: true
+            name: {{ svi.vlan.name }}
+{%                         if svi.vlan.cf_vxlan_enable is defined and svi.vlan.cf_vxlan_enable is false %}
+            vxlan: false
+{%                         endif %}
+{#          Building SVI IP-addressing #}
+{%                         for ip in svi.ip_addresses %}
+{%                             if ip.type == "ANYCAST" %}
+            ip_address_virtual: {{ ip.address }}
+{%                             elif ip.type == "VIP" %}
+            ip_virtual_router_addresses: [ {{ ip.address.split("/")[0] }} ]
+{%                             elif ip.type == "SECONDARY" %}
+{%                                 do service_nodes.ips.append(ip) %}
+{%                             endif %}
+{%                         endfor %}
+{%                         if service_nodes.ips | length > 0 %}
+            nodes:
+{%                             for ip in service_nodes.ips %}
+              - node: {{ ip.device }}
+                ip_address: {{ ip.address }}
+{%                             endfor %}
+{%                         endif %}
+{%                         if svi.vlan.cf_mtu is defined and svi.vlan.cf_mtu is not none and svi.vlan.cf_mtu != "" %}
+            mtu: {{ svi.vlan.cf_mtu }}
+{%                         endif %}
+            tags:
+{%                         if svi.vlan.tags is defined and svi.vlan.tags is not none and svi.vlan.tags | length > 0 %}
+{%                             for tag in svi.vlan.tags %}
+              - {{ tag.name }}
+{%                             endfor %}
+{%                         else %}
+              - avd
+{%                         endif %}
+{#          Building SVI OSPF Settings #}
+{%                         if (svi.vlan.cf_ospf_enabled is defined and svi.vlan.cf_ospf_enabled == true) or (svi.cf_ospf_enabled is defined and svi.cf_ospf_enabled == true) %}
+            ospf:
+              enabled: true
+{%                         endif %}
+{%                         if svi.vlan.cf_ip_helpers is defined and svi.vlan.cf_ip_helpers is not none %}
+            ip_helpers:
+{%                             for ip_helper in svi.vlan.cf_ip_helpers.split(",") %}
+{%                                 if ip_helper != "" and ip_helper | ansible.utils.ipaddr %}
+              - ip_helper: {{ ip_helper }}
+{%                                 endif %}
+{%                            endfor %}
+{%                         endif %}
+{%                     endif %}
+{%                 endfor %}
+{%             endif %}
+{#      Building vrf bgp_peers #}
+{%             set services_data.bgp_peers = [] %}
+{%             for ip_address in vrf.ip_addresses %}
+{%                 if ip_address.interface is defined and ip_address.interface is not none %}
+{%                     if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                         if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
+{%                             if (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == services_data.site_name) or (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == "Global") or (ip_address.interface.device.site.name == none) %}
+{%                                 do services_data.bgp_peers.append(ip_address) %}
+{%                             endif %}
+{%                         endif %}
+{%                     endif %}
+{%                 endif %}
+{%             endfor %}
+{%             if services_data.bgp_peers | length > 0 %}
+        bgp_peers:
+{%                 for ip_address in services_data.bgp_peers %}
+{%                     set peer_ip = ip_address.address.split("/")[0] %}
+{# need to add data model for this #}
+          - ip_address: {{ peer_ip }}
+            remote_as: {{ ip_address.interface.device.cf_bgp_asn }}
+            description: {{ ip_address.interface.device.name }}
+{%                     if services_data.default_peering_devices is defined and services_data.default_peering_devices | length > 0 %}
+            nodes: {{ services_data.default_peering_devices }}
+{%                     endif %}
+            maximum_routes: {{ services_data.bgp_peers_maximum_routes }}
+{%                     if ip_address.interface.device.cf_default_originate is defined and ip_address.interface.device.cf_default_originate is not none %}
+{%                         if ip_address.interface.device.cf_default_originate == "always" %}
+            default_originate:
+              always: true
+{%                         elif ip_address.interface.device.cf_default_originate == "on" %}
+            default_originate: true
+{%                         endif %}
+{%                     endif %}
+{%                     if ip_address.interface.device.cf_bgp_password is defined and ip_address.interface.device.cf_bgp_password not in [none, ""] %}
+            password: {{ ip_address.interface.device.cf_bgp_password }}
+{%                     endif %}
+{# Implement logic to loop through svis and find the virtual router address to set the nexthop #}
+{# test: {{ ["192.168.0.7/24"] | ansible.utils.ipaddr("host/prefix") | ansible.utils.ipaddr("subnet") | ansible.utils.ipaddr("1") }} #}
+{# implement local_as knob. #}
+{%                     if services_data.fabric_local_as is defined and services_data.fabric_local_as is not in [none, ""] %}
+            local_as: {{ services_data.fabric_local_as }}
+{%                     endif %}
+{%                     if ip_address.interface.device.cf_local_as is defined and ip_address.interface.device.cf_local_as is not in [none, ""] %}
+            local_as: {{ ip_address.interface.device.cf_local_as }}
+{%                     endif %}
+{%                     if ip_address.interface.device.cf_bfd is defined and ip_address.interface.device.cf_bfd is true %}
+            bfd: true
+{%                     endif %}
+{%                     if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not in [none, ""] %}
+            route_map_in: {{ ip_address.interface.device.cf_route_map_in }}
+{%                     endif %}
+{%                     if ip_address.interface.device.cf_route_map_out is defined and ip_address.interface.device.cf_route_map_out is not none %}
+            route_map_out: {{ ip_address.interface.device.cf_route_map_out }}
+{%                     else %}
+{# route_map_out and set_ipv4_nexthop are mutually exclusive, route-map-out takes precedence #}
+{%                         set peer_subnet = [ip_address.address | ansible.utils.ipaddr("host/prefix") | ansible.utils.ipaddr("subnet")] %}
+{%                         for svi in vrf.svis %}
+{%                             if svi.ip_addresses | length > 0 %}
+{%                                 for ip in svi.ip_addresses %}
+{%                                     if ip.type == "VIP" %}
+{%                                         set svi_subnet = [ip.address | ansible.utils.ipaddr("host/prefix") | ansible.utils.ipaddr("subnet")] %}
+{%                                         if peer_subnet == svi_subnet %}
+            set_ipv4_next_hop: {{ ip.address.split("/")[0] }}
+{%                                         endif  %}
+{%                                     endif %}
+{%                                 endfor %}
+{%                             endif %}
+{%                         endfor %}
+{%                     endif %}
+{%                 endfor %}
+{%             endif %}
+{#      Building vrf l3_interfaces #}
+{%             set services_data.l3_interfaces = [] %}
+        l3_interfaces:
+{%             for ip_address in vrf.ip_addresses %}
+{%                 if ip_address.interface is defined and ip_address.interface is not none %}
+{%                     if "Ethernet" in ip_address.interface.name %}
+{%                         if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                             for device in services_data.tenant_devices %}
+{#                             Testing for l3leaf is important to distinguish this from an external routing device #}
+{%                                 if device.name == ip_address.interface.device.name and device.device_role == "l3leaf" %}
+{%                                     if device.site.name == services_data.site_name %}
+{%                                         do services_data.l3_interfaces.append(ip_address) %}
+{%                                         break %}
+{%                                     endif %}
+{%                                 endif %}
+{%                             endfor %}
+{%                         endif %}
+{%                     endif %}
+{%                 endif %}
+{%             endfor %}
+{%             if services_data.l3_interfaces | length > 0 %}
+{%                 for ip_address in services_data.l3_interfaces %}
+          - interfaces: [ {{ ip_address.interface.name }} ]
+            ip_addresses: [ {{ ip_address.address }} ]
+            enabled: true
+            nodes: [ {{ ip_address.interface.device.name }} ]
+{%                     if ip_address.interface.description != "" %}
+            description: {{ ip_address.interface.description }}
+{%                     else %}
+            description: {{ "Customer " ~ tenant.name ~ " vrf " ~ vrf.name ~ " routed interface" }}
+{%                    endif %}
+{%                     if ip_address.interface.cf_ospf_enabled is defined and ip_address.interface.cf_ospf_enabled == true %}
+            ospf:
+              enabled: true
+{%                     endif %}
+{%                 endfor %}
+{%             endif %}
+{# Static routes, since my graphql query returns prefixes as svis, i have to use that... #}
+{%             set prefixes = vrf.svis %}
+{%             set services_data.static_routes = [] %}
+{%             set services_data.default_routes = [] %}
+{%             for prefix in prefixes %}
+{%                 if (prefix.role.name is defined and prefix.role.name == "static_route") and (prefix.cf_next_hop is defined and prefix.cf_next_hop) %}
+{%                     do services_data.static_routes.append(prefix) %}
+{%                 endif %}
+{%             endfor %}
+{%             for ip_address in vrf.ip_addresses %}
+{%                 if ip_address.interface is defined and ip_address.interface is not none and ip_address.cf_is_default_route is true %}
+{%                     do services_data.default_routes.append(ip_address) %}
+{%                 endif %}
+{%             endfor %}
+{%             if services_data.static_routes | length > 0 or services_data.default_routes | length > 0 %}
+        static_routes:
+{%                 for prefix in services_data.static_routes %}
+          - destination_address_prefix: {{ prefix.prefix }}
+            gateway: {{ prefix.cf_next_hop }}
+{%                     if prefix.description != "" %}
+            name: {{ prefix.description | replace(" ", "_") }}
+{%                     endif %}
+{%                 endfor %}
+{%                 for ip_address in services_data.static_routes %}
+          - destination_address_prefix: 0.0.0.0/0
+            gateway: {{ ip_address.address.split("/")[0] }}
+{%                 endfor %}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{% endfor %}
