@@ -3,18 +3,22 @@ tenants:
   - name: {{ tenant.name }}
     mac_vrf_vni_base: {{ tenant.mac_vrf_vni_base }}
 {#  Building l2vlans #}
-{%     if tenant.l2vlans | length > 0 %}
+{%     set services_data.l2vlans = [] %}
+{%     for l2vlan in tenant.l2vlans %}
+{%         if ((l2vlan.site.name is defined and (l2vlan.site.name == services_data.site_name or l2vlan.site.name == "Global")) or l2vlan.site == none) and l2vlan.status.name == "Active" %}
+{%             do services_data.l2vlans.append(l2vlan) %}
+{%         endif %}
+{%     endfor %}
+{%     if services_data.l2vlans | length > 0 %}
     l2vlans:
-{%         for l2vlan in tenant.l2vlans %}
-{%             if ((l2vlan.site.name is defined and (l2vlan.site.name == services_data.site_name or l2vlan.site.name == "Global")) or l2vlan.site == none) and l2vlan.status.name == "Active" %}
+{%         for l2vlan in services_data.l2vlans %}
       - id: {{ l2vlan.vid }}
         name: {{ l2vlan.name }}
-{%                 set service_tags = [] %}
-{%                 for tag in l2vlan.tags %}
-{%                     do service_tags.append(tag.name) %}
-{%                 endfor %}
+{%             set service_tags = [] %}
+{%             for tag in l2vlan.tags %}
+{%                 do service_tags.append(tag.name) %}
+{%             endfor %}
         tags: {{ service_tags }}
-{%             endif %}
 {%         endfor %}
 {%     endif %}
 {#  Building vrfs #}
