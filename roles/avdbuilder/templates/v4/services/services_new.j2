@@ -38,6 +38,7 @@ tenants:
         enable_mlag_ibgp_peering_vrfs: false
 {%             endif %}
 {#      Building SVIs #}
+{%             set %}
 {%             if vrf.svis | length > 0 %}
         svis:
 {%                 for svi in vrf.svis %}

@@ -41,6 +41,14 @@ tenants:
 {%         else %}
         enable_mlag_ibgp_peering_vrfs: false
 {%         endif %}
+{%         set services_data.svis = [] %}
+{%         for svi in vrf.svis %}
+{%             set service_nodes = namespace(ips = []) %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
+{%                 do services_data.svis.append(svi)%}
+{%             endif %}
+{%         endfor %}
+{%         if services_data.svis | length > 0 %}
 {#      Building SVIs #}
         svis:
 {%         for svi in vrf.svis %}
@@ -95,6 +103,7 @@ tenants:
 {%                 endif %}
 {%             endif %}
 {%         endfor %}
+{%         endif %}
 {#      Building vrf bgp_peers #}
         bgp_peers:
 {%         for ip_address in vrf.ip_addresses %}
