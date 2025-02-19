@@ -174,10 +174,13 @@ The **Device Role** objects SHOULD not have the VM Role attribute.
 # 4. Tags
 
 At least one **Tag** object MUST be created which is used to identify “interesting” objects for the ansible roles.
+Tags are used for vlan site activation
+The disable tag is used under a vlan to set the vlan interface in shutdown mode.
 
 ## 4.1 Required Tags
 
 The only mandatory tag that is in use by the ansible logic MUST have the name “avd” and slug “avd”.
+
 
 ## 4.2 Optional Tags
 
