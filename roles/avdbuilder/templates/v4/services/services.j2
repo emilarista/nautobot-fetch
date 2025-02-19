@@ -55,7 +55,8 @@ tenants:
 {%             set service_nodes = namespace(ips = []) %}
 {%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
           - id: {{ svi.vlan.vid }}
-            enabled: true
+{% set enabled = false if svi.vlan.tags | selectattr("name", "eq", "disable") | list else true %}
+            enabled: {{ enabled }}  
             name: {{ svi.vlan.name }}
 {%                 if svi.vlan.cf_vxlan_enable is defined and svi.vlan.cf_vxlan_enable is false %}
             vxlan: false
