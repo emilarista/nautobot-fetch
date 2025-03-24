@@ -9,8 +9,8 @@
 {% set dc_data.sites = nb_sites.sites %}
 {% set dc_data.route_servers = nb_route_servers.devices %}
 {% set dc_data.spines = nb_spines.devices %}
-{% set dc_data.l3leaf_mlag_pairs = nb_mlag_pairs.virtual_chassis %}
-{% set dc_data.l2leaf_mlag_pairs = nb_subleaf_mlag_pairs.virtual_chassis %}
+{% set dc_data.l3leaf_mlag_pairs = nb_mlag_pairs.virtual_chassis | selectattr("members") %}
+{% set dc_data.l2leaf_mlag_pairs = nb_subleaf_mlag_pairs.virtual_chassis | selectattr("members") %}
 {% set dc_data.standalone_leafs = nb_standalone_leafs.devices %}
 {% set dc_data.dc_defaults = hostvars[inventory_hostname][dc_data.site_name].dc_defaults %}
 {% set dc_data.spine_defaults = hostvars[inventory_hostname][dc_data.site_name].spine.defaults %}
