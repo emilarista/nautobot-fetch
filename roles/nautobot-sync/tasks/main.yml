@@ -24,6 +24,30 @@
     - always
 ###########################################################
 
+######### Retrieve subleaf MLAG Pairs from Nautobot ###############
+- name: Get nautobot subleaf mlag pairs
+  uri:
+    url: "http://{{ ansible_host }}:{{ nautobot_api_port }}/api/graphql/"
+    validate_certs: no
+    method: POST
+    timeout: 120
+    headers:
+      Authorization: 'Token {{ api_token }}'
+    body_format: json
+    body:
+      query: '{{ lookup("template", "roles/nautobot-sync/templates/mlag_pairs_subleafs.graphql") }}'
+  register: nautobot_subleaf_mlag_pairs_query
+  run_once: true
+  tags:
+    - always
+
+- name: Set subleaf_mlag_pairs fact
+  set_fact:
+    nb_subleaf_mlag_pairs: "{{ nautobot_subleaf_mlag_pairs_query.json.data }}"
+  run_once: true
+  tags:
+    - always
+###########################################################
 
 ######### Retrieve Standalone Leafs from Nautobot #########
 - name: Get nautobot standalone leafs

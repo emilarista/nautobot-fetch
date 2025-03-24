@@ -1,0 +1,83 @@
+{
+  virtual_chassis(tag: "avd") {
+    name
+    members(status: "active", role: "l2leaf") {
+      name
+      status {
+        name
+      }
+      device_type {
+        model
+      }
+      device_role {
+        name
+      }
+      tags {
+        name
+      }
+      rack {
+        name
+      }
+      primary_ip4 {
+        address
+      }
+      cf_device_id
+      site {
+        name
+      }
+      uplinks: interfaces (tag: "uplink") {
+        name
+        connected_interface {
+          name
+          device {
+            name
+          }
+        }
+      }
+      peerlinks: interfaces (tag: "peerlink") {
+        name
+      }
+      interfaces {
+        name
+        description
+        label
+        member_interfaces {
+          name
+          connected_interface {
+            device {
+              name
+            }
+          }
+          device {
+            name
+          }
+        }
+        untagged_vlan {
+          vid
+        }
+        tagged_vlans {
+          vid
+        }
+        cf_raw_eos_cli
+        cf_speed
+        mode
+        lag {
+          name
+        }
+        mtu
+        type
+        enabled
+        connected_interface {
+          device {
+            name
+            cf_bgp_asn
+          }
+          name
+        }
+        tags {
+          slug
+        }
+      }
+    }
+  }
+}
