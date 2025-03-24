@@ -3,7 +3,7 @@
     name
     cf_bgp_asn
     cf_evpn_role
-    members {
+    members(status: "active", role: "l3leaf") {
       name
       status {
         name
