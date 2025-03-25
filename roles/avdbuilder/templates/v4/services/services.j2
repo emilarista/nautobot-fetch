@@ -3,9 +3,15 @@ tenants:
   - name: {{ tenant.name }}
     mac_vrf_vni_base: {{ tenant.mac_vrf_vni_base }}
 {#  Building l2vlans #}
-    l2vlans:
+{%     set services_data.l2vlans = [] %}
 {%     for l2vlan in tenant.l2vlans %}
 {%         if ((l2vlan.site.name is defined and (l2vlan.site.name == services_data.site_name or l2vlan.site.name == "Global")) or l2vlan.site == none) and l2vlan.status.name == "Active" %}
+{%             do services_data.l2vlans.append(l2vlan) %}
+{%         endif %}
+{%     endfor %}
+{%     if services_data.l2vlans | length > 0 %}
+    l2vlans:
+{%         for l2vlan in services_data.l2vlans %}
       - id: {{ l2vlan.vid }}
         name: {{ l2vlan.name }}
 {%             set service_tags = [] %}
@@ -13,9 +19,10 @@ tenants:
 {%                 do service_tags.append(tag.name) %}
 {%             endfor %}
         tags: {{ service_tags }}
-{%         endif %}
-{%     endfor %}
+{%         endfor %}
+{%     endif %}
 {#  Building vrfs #}
+{%     if tenant.vrfs | length > 0 %}
     vrfs:
 {%     for vrf in tenant.vrfs %}
       - name: {{ vrf.name }}
@@ -34,13 +41,22 @@ tenants:
 {%         else %}
         enable_mlag_ibgp_peering_vrfs: false
 {%         endif %}
+{%         set services_data.svis = [] %}
+{%         for svi in vrf.svis %}
+{%             set service_nodes = namespace(ips = []) %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
+{%                 do services_data.svis.append(svi)%}
+{%             endif %}
+{%         endfor %}
+{%         if services_data.svis | length > 0 %}
 {#      Building SVIs #}
         svis:
 {%         for svi in vrf.svis %}
 {%             set service_nodes = namespace(ips = []) %}
 {%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
           - id: {{ svi.vlan.vid }}
-            enabled: true
+{% set enabled = false if svi.vlan.tags | selectattr("name", "eq", "disable") | list else true %}
+            enabled: {{ enabled }}  
             name: {{ svi.vlan.name }}
 {%                 if svi.vlan.cf_vxlan_enable is defined and svi.vlan.cf_vxlan_enable is false %}
             vxlan: false
@@ -88,6 +104,7 @@ tenants:
 {%                 endif %}
 {%             endif %}
 {%         endfor %}
+{%         endif %}
 {#      Building vrf bgp_peers #}
         bgp_peers:
 {%         for ip_address in vrf.ip_addresses %}
@@ -208,4 +225,5 @@ tenants:
 {%               endif %}
 {%           endfor %}
 {%     endfor %}
+{%     endif %}
 {% endfor %}

@@ -43,17 +43,23 @@
 {%     do mlag_pair.update({"bgp_as": mlag_pair_bgp_as}) %}
 {%     for device in mlag_pair.members %}
 {%         do mlag_pair.update({"site": {"name": device.site.name}}) %}
-{#             add some logic for future use #}
-{%             set nb_uplinks = device.uplinks | map(attribute = "name") | default([]) %}
-{%             set nb_peerlinks = device.peerlinks | map(attribute = "name") | default([]) %}
-{%             set device_ul_switch_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
-{%             set device_ul_switches = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switches | default([]) %}
+{#             set uplinks, peerlinks, uplink_switches and uplink_switch_interfaces based on nautobot info #}
+{%             set nb_uplinks = device.uplinks | map(attribute = "name") %}
+{%             set nb_uplink_switches = device.uplinks | selectattr("connected_interface.name", "defined") | map(attribute = "connected_interface.device.name") | default([]) %}
+{%             set nb_uplink_switch_interfaces = device.uplinks | selectattr("connected_interface.name", "defined") | map(attribute = "connected_interface.name") | default([]) %}
+{%             set nb_peerlinks = device.peerlinks | map(attribute = "name") %}
+{#             set uplink_switches, uplink_switch_interfaces based on nautobot hostvars #}
 {%             set device_ul_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_interfaces | default([]) %}
+{%             set device_ul_switches = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switches | default([]) %}
+{%             set device_ul_switch_interfaces = dc_data.l3leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
+{#             set bgp asn #}
 {%             set device_bgp_as = hostvars[inventory_hostname][dc_data.site_name].l3leaf.node_groups[mlag_pair.name].nodes[device.name].bgp_as | default(none) %}
-{%             do device.update({"uplink_switch_interfaces": device_ul_switch_interfaces}) %}
-{%             do device.update({"uplink_switches": device_ul_switches} )%}
-{%             do device.update({"uplink_interfaces": device_ul_interfaces} )%}
+{#             update the device dict with values for templating, manual hostvars overrides nautobot stuff #}
+{%             do device.update({"uplink_interfaces": device_ul_interfaces if device_ul_interfaces else nb_uplinks }) %}
+{%             do device.update({"uplink_switches": device_ul_switches if device_ul_switches else nb_uplink_switches} )%}
+{%             do device.update({"uplink_switch_interfaces": device_ul_switch_interfaces if device_ul_switch_interfaces else nb_uplink_switch_interfaces }) %}
 {%             do device.update({"bgp_as": device_bgp_as}) %}
+{%             do device.update({"mlag_interfaces": nb_peerlinks }) %}
 {# need to build uplink_switch_interfaces for l3leaf defaults, set thelist = [] for item in uplink_switches thelist.append("Ethernet"~"id"/1) #}
 {%     endfor %}
 {%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ "all" ]}}) %}

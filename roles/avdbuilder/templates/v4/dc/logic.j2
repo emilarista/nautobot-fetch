@@ -9,13 +9,15 @@
 {% set dc_data.sites = nb_sites.sites %}
 {% set dc_data.route_servers = nb_route_servers.devices %}
 {% set dc_data.spines = nb_spines.devices %}
-{% set dc_data.l3leaf_mlag_pairs = nb_mlag_pairs.virtual_chassis %}
+{% set dc_data.l3leaf_mlag_pairs = nb_mlag_pairs.virtual_chassis | selectattr("members") %}
+{% set dc_data.l2leaf_mlag_pairs = nb_subleaf_mlag_pairs.virtual_chassis | selectattr("members") %}
 {% set dc_data.standalone_leafs = nb_standalone_leafs.devices %}
 {% set dc_data.dc_defaults = hostvars[inventory_hostname][dc_data.site_name].dc_defaults %}
 {% set dc_data.spine_defaults = hostvars[inventory_hostname][dc_data.site_name].spine.defaults %}
 {% set dc_data.l3leaf_defaults = hostvars[inventory_hostname][dc_data.site_name].l3leaf.defaults %}
 {% set dc_data.l3leaf_node_groups = hostvars[inventory_hostname][dc_data.site_name].l3leaf.node_groups %}
 {% set dc_data.l2leaf_defaults = hostvars[inventory_hostname][dc_data.site_name].l2leaf.defaults %}
+{% set dc_data.l2leaf_node_groups = hostvars[inventory_hostname][dc_data.site_name].l2leaf.node_groups %}
 {# need to build uplink_siwtches per node in node_group #}
 
 {# building evpn_route_servers for l3leafs #}
@@ -56,12 +58,24 @@
 {%             do device.update({"bgp_as": device_bgp_as}) %}
 {# need to build uplink_switch_interfaces for l3leaf defaults, set thelist = [] for item in uplink_switches thelist.append("Ethernet"~"id"/1) #}
 {%     endfor %}
-{%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ "all" ]}}) %}
+{%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ dc_data.site_name, "global" ]}}) %}
 {%     if mlag_pair.cf_evpn_role == "client" %}
 {%         do mlag_pair.update({"evpn_route_servers": dc_data.l3leaf_route_servers}) %}
 {%     elif mlag_pair.cf_evpn_role == "server" %}
 {%         do mlag_pair.update({"evpn_route_servers": dc_data.route_server_peers}) %}
 {%     endif %}
+{% endfor %}
+{% for mlag_pair in dc_data.l2leaf_mlag_pairs %}
+{%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ dc_data.site_name, "global" ]}}) %}
+{%     for device in mlag_pair.members %}
+{%         do mlag_pair.update({"site": {"name": device.site.name}}) %}
+{%         set device_ul_switch_interfaces = dc_data.l2leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
+{%         set device_ul_switches = dc_data.l2leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switches | default([]) %}
+{%         set device_ul_interfaces = dc_data.l2leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_interfaces | default([]) %}
+{%         do device.update({"uplink_switch_interfaces": device_ul_switch_interfaces}) %}
+{%         do device.update({"uplink_switches": device_ul_switches} )%}
+{%         do device.update({"uplink_interfaces": device_ul_interfaces} )%}
+{%     endfor %}
 {% endfor %}
 {# putting more data into standalone leafs as well #}
 {% for leaf in dc_data.standalone_leafs %}

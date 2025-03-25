@@ -1,0 +1,28 @@
+l2leaf:
+  defaults:
+    {{ dc_data.l2leaf_defaults | to_nice_yaml(indent=2) | indent(4) }}
+  node_groups:
+{% for node_group in dc_data.l2leaf_mlag_pairs %}
+{%     if node_group.site.name == dc_data.site_name %}
+    - group: {{ node_group.name }}
+      filter:
+        {{ node_group.filter | to_nice_yaml(indent=2) | indent(8) }}
+        only_vlans_in_use: true
+      nodes:
+{%        for node in node_group.members %}
+        - name: {{ node.name }}
+          id: {{ node.cf_device_id }}
+          platform: {{ node.device_type.model }}
+          mgmt_ip: {{ node.primary_ip4.address }}
+{%            if node.uplink_switches | length > 0 %}
+          uplink_switches: {{ node.uplink_switches }}
+{%            endif %}
+{%            if node.uplink_switch_interfaces | length > 0 %}
+          uplink_switch_interfaces: {{ node.uplink_switch_interfaces }}
+{%            endif %}
+{%            if node.uplink_interfaces | length > 0 %}
+          uplink_interfaces: {{ node.uplink_interfaces }}
+{%            endif %}
+{%        endfor %}
+{%     endif %}
+{% endfor %}

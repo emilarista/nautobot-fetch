@@ -1,9 +1,7 @@
 {
   virtual_chassis(tag: "avd") {
     name
-    cf_bgp_asn
-    cf_evpn_role
-    members(status: "active", role: "l3leaf") {
+    members(status: "active", role: "l2leaf") {
       name
       status {
         name
@@ -24,8 +22,6 @@
         address
       }
       cf_device_id
-      cf_evpn_role
-      cf_bgp_asn
       site {
         name
       }
@@ -71,12 +67,6 @@
         mtu
         type
         enabled
-        ip_addresses {
-          address
-          vrf {
-            name
-          }
-        }
         connected_interface {
           device {
             name

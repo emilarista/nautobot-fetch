@@ -5,6 +5,9 @@
     l2vlans: vlans(tag: "avd", status: "active") {
       name
       vid
+      status {
+        name
+      }
       tags {
         name
       }
@@ -25,6 +28,7 @@
       ip_addresses(status: "active") {
         role
         address
+        cf_is_default_route
         interface {
           cf_raw_eos_cli
           cf_ospf_enabled
@@ -37,6 +41,8 @@
             cf_route_map_out
             cf_bgp_password
             cf_default_originate
+            cf_local_as
+            cf_bfd
             device_role {
               name
             }
@@ -47,19 +53,32 @@
         }
       }
       cf_ospf_enabled
+      cf_mlag_ibgp_peering
+      cf_mlag_ibgp_peering_vlan
       name
+      tags {
+        name
+      }
       vrf_vni: rd
       svis: prefixes(tag: "avd", status: "active") {
         prefix
         cf_next_hop
         description
+        status {
+          name
+        }
         role {
           name
         }
         vlan {
           cf_ospf_enabled
           cf_ip_helpers
+          cf_mtu
+          cf_vxlan_enable
           name
+          status {
+            name
+          }
           site {
             name
           }
