@@ -66,6 +66,9 @@
 {% endfor %}
 {% for mlag_pair in dc_data.l2leaf_mlag_pairs %}
 {%     do mlag_pair.update({"filter": {"tenants": [ "all" ], "tags": [ dc_data.site_name, "global" ]}}) %}
+{%     for device in mlag_pair.members %}
+{%         do mlag_pair.update({"site": {"name": device.site.name}}) %}
+{%     endfor %}
 {% endfor %}
 {# putting more data into standalone leafs as well #}
 {% for leaf in dc_data.standalone_leafs %}

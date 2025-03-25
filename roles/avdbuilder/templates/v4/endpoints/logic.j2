@@ -7,7 +7,7 @@
 {% endfor %}
 {# Building list of all devices #}
 {% set endpoints_data.endpoint_devices = [] %}
-{% for vchassis in nb_mlag_pairs.virtual_chassis %}
+{% for vchassis in nb_mlag_pairs.virtual_chassis + nb_subleaf_mlag_pairs.virtual_chassis %}
 {%     for device in vchassis.members %}
 {%         if device.site.name == endpoints_data.site_name %}
 {%             do endpoints_data.endpoint_devices.append(device) %}
