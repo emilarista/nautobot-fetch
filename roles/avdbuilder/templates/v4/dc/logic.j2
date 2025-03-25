@@ -72,6 +72,9 @@
 {%         set device_ul_switch_interfaces = dc_data.l2leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switch_interfaces | default([]) %}
 {%         set device_ul_switches = dc_data.l2leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_switches | default([]) %}
 {%         set device_ul_interfaces = dc_data.l2leaf_node_groups[mlag_pair.name].nodes[device.name].uplink_interfaces | default([]) %}
+{%         do device.update({"uplink_switch_interfaces": device_ul_switch_interfaces}) %}
+{%         do device.update({"uplink_switches": device_ul_switches} )%}
+{%         do device.update({"uplink_interfaces": device_ul_interfaces} )%}
 {%     endfor %}
 {% endfor %}
 {# putting more data into standalone leafs as well #}
