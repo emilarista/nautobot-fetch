@@ -1,7 +1,0 @@
-{# Render routing policies #}
-{% for key, value in services_data.routing_policy.items() %}
-{%     if value != {} %}
-### {{key}}
-{{ {"custom_structured_configuration_" ~ key: value} | to_nice_yaml(indent=2) }}
-{%     endif %}
-{% endfor %}
