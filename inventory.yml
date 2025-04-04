@@ -4,8 +4,7 @@ all:
     NAUTOBOT:
       hosts:
         nautobot:
-          ansible_host: 10.41.41.10
-          api_token: ff0fa3e62e02faa83c0dbd36a3395cc688c84051
+          ansible_host: x.x.x.x
+          api_token: "***"
     CVP:
       hosts:
-
