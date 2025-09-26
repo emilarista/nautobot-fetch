@@ -1,7 +1,36 @@
 {# Render routing policies #}
-{% for key, value in services_data.routing_policy.items() %}
-{%     if value != {} %}
-### {{key}}
-{{ {"custom_structured_configuration_" ~ key: value} | to_nice_yaml(indent=2) }}
+{% for policy_type, policies in services_data.routing_policy.items() %}
+{%     if policies != {} %}
+### {{ policy_type }}
+custom_structured_configuration_{{ policy_type }}:
+{%         for policy_name, policy_config in policies.items() %}
+  - name: {{ policy_name }}
+{%             for key, value in policy_config.items() %}
+{%                 if key == 'sequence_numbers' %}
+    {{ key }}:
+{%                     for seq_num, seq_config in value.items() %}
+      - sequence: {{ seq_num }}
+{%                         for config_key, config_value in seq_config.items() %}
+{%                             if config_key == 'match' %}
+        {{ config_key }}:
+{%                                 for match_item in config_value %}
+          - {{ match_item }}
+{%                                 endfor %}
+{%                             elif config_key == 'set' %}
+        {{ config_key }}:
+{%                                 for set_item in config_value %}
+          - {{ set_item }}
+{%                                 endfor %}
+{%                             else %}
+        {{ config_key }}: {{ config_value }}
+{%                             endif %}
+{%                         endfor %}
+{%                     endfor %}
+{%                 else %}
+    {{ key }}:
+{{ value | to_nice_yaml(indent=2) | indent(6) }}
+{%                 endif %}
+{%             endfor %}
+{%         endfor %}
 {%     endif %}
 {% endfor %}
