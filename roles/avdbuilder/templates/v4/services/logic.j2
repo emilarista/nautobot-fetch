@@ -21,7 +21,82 @@
 {% set services_data.default_peering_devices = hostvars[inventory_hostname][services_data.site_name].default_peering_devices %}
 {% set services_data.fabric_local_as = hostvars[inventory_hostname].avd_fabric_defaults.fabric_local_as | default(none) %}
 {% set services_data.bgp_peers_maximum_routes = hostvars[inventory_hostname].avd_fabric_defaults.bgp_peers_maximum_routes | default(10000) %}
-{# Handling routing policies #}
+{# Collect referenced route-maps from BGP peers #}
+{% set services_data.referenced_route_maps = {} %}
+{% for tenant in services_data.tenants | emil.nbavd.structure_tenants %}
+{%     for vrf in tenant.vrfs %}
+{%         for ip_address in vrf.ip_addresses %}
+{%             if ip_address.interface is defined and ip_address.interface is not none %}
+{%                 if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                     if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
+{%                         if (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == services_data.site_name) or (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == "Global") or (ip_address.interface.device.site.name == none) %}
+{%                             if ip_address.interface.device.cf_route_map_in is defined and ip_address.interface.device.cf_route_map_in is not in [none, ""] %}
+{%                                 do services_data.referenced_route_maps.update({ip_address.interface.device.cf_route_map_in: true}) %}
+{%                             endif %}
+{%                             if ip_address.interface.device.cf_route_map_out is defined and ip_address.interface.device.cf_route_map_out is not in [none, ""] %}
+{%                                 do services_data.referenced_route_maps.update({ip_address.interface.device.cf_route_map_out: true}) %}
+{%                             endif %}
+{%                         endif %}
+{%                     endif %}
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
+{%     endfor %}
+{% endfor %}
+
+{# Function to extract referenced components from route-map configuration #}
+{% set services_data.extract_dependencies = namespace() %}
+{% macro extract_routing_policy_dependencies(route_map_config, referenced_components) %}
+{%     if route_map_config.sequence_numbers is defined %}
+{%         for seq_num, seq_config in route_map_config.sequence_numbers.items() %}
+{%             if seq_config.match is defined %}
+{%                 for match_item in seq_config.match %}
+{%                     if "prefix-list" in match_item %}
+{# Extract prefix-list name from match statements like "ip address prefix-list PREFIX_NAME" #}
+{%                         set prefix_list_name = match_item.split("prefix-list")[-1].strip() %}
+{%                         do referenced_components.prefix_lists.update({prefix_list_name: true}) %}
+{%                     elif "community-list" in match_item %}
+{# Extract community-list name #}
+{%                         set community_list_name = match_item.split("community-list")[-1].strip() %}
+{%                         do referenced_components.community_lists.update({community_list_name: true}) %}
+{%                     elif "extcommunity-list" in match_item %}
+{# Extract extcommunity-list name #}
+{%                         set extcommunity_list_name = match_item.split("extcommunity-list")[-1].strip() %}
+{%                         do referenced_components.ip_extcommunity_lists.update({extcommunity_list_name: true}) %}
+{%                     endif %}
+{%                 endfor %}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{% endmacro %}
+
+{# Collect all routing policy dependencies based on referenced route-maps #}
+{% set services_data.referenced_components = {
+    "prefix_lists": {},
+    "ipv6_prefix_lists": {},
+    "community_lists": {},
+    "ip_extcommunity_lists": {},
+    "ip_extcommunity_lists_regexp": {}
+} %}
+
+{# Scan through config contexts to find route-map definitions and extract their dependencies #}
+{% if nb_config_contexts is defined and nb_config_contexts is not none %}
+{%     for context in nb_config_contexts %}
+{%         if context.value.tenants | length > 0 and ("AVD" in context.value.tags or "avd" in context.value.tags) and "routing_policy" in context.value.tags %}
+{%             set data = context.value.data %}
+{%             if data.route_maps is defined %}
+{%                 for route_map_name, route_map_config in data.route_maps.items() %}
+{%                     if route_map_name in services_data.referenced_route_maps %}
+{# This route-map is actually used, so extract its dependencies #}
+{%                         do extract_routing_policy_dependencies(route_map_config, services_data.referenced_components) %}
+{%                     endif %}
+{%                 endfor %}
+{%             endif %}
+{%         endif %}
+{%     endfor %}
+{% endif %}
+
+{# Handling routing policies - only include components that are actually referenced #}
 {% set services_data.routing_policy = {
     "route_maps": {},
     "prefix_lists": {},
@@ -36,7 +111,49 @@
 {%             set data = context.value.data %}
 {%             for key, value in data.items() %}
 {%                 if key in services_data.routing_policy %}
-{%                     do services_data.routing_policy[key].update(value) %}
+{%                     if key == "route_maps" %}
+{# Only include route-maps that are actually referenced by BGP peers for this site #}
+{%                         for route_map_name, route_map_config in value.items() %}
+{%                             if route_map_name in services_data.referenced_route_maps %}
+{%                                 do services_data.routing_policy[key].update({route_map_name: route_map_config}) %}
+{%                             endif %}
+{%                         endfor %}
+{%                     elif key == "prefix_lists" %}
+{# Only include prefix-lists that are referenced by the used route-maps #}
+{%                         for prefix_list_name, prefix_list_config in value.items() %}
+{%                             if prefix_list_name in services_data.referenced_components.prefix_lists %}
+{%                                 do services_data.routing_policy[key].update({prefix_list_name: prefix_list_config}) %}
+{%                             endif %}
+{%                         endfor %}
+{%                     elif key == "ipv6_prefix_lists" %}
+{# Only include IPv6 prefix-lists that are referenced by the used route-maps #}
+{%                         for ipv6_prefix_list_name, ipv6_prefix_list_config in value.items() %}
+{%                             if ipv6_prefix_list_name in services_data.referenced_components.ipv6_prefix_lists %}
+{%                                 do services_data.routing_policy[key].update({ipv6_prefix_list_name: ipv6_prefix_list_config}) %}
+{%                             endif %}
+{%                         endfor %}
+{%                     elif key == "community_lists" %}
+{# Only include community-lists that are referenced by the used route-maps #}
+{%                         for community_list_name, community_list_config in value.items() %}
+{%                             if community_list_name in services_data.referenced_components.community_lists %}
+{%                                 do services_data.routing_policy[key].update({community_list_name: community_list_config}) %}
+{%                             endif %}
+{%                         endfor %}
+{%                     elif key == "ip_extcommunity_lists" %}
+{# Only include extended community-lists that are referenced by the used route-maps #}
+{%                         for extcommunity_list_name, extcommunity_list_config in value.items() %}
+{%                             if extcommunity_list_name in services_data.referenced_components.ip_extcommunity_lists %}
+{%                                 do services_data.routing_policy[key].update({extcommunity_list_name: extcommunity_list_config}) %}
+{%                             endif %}
+{%                         endfor %}
+{%                     elif key == "ip_extcommunity_lists_regexp" %}
+{# Only include extended community-lists regexp that are referenced by the used route-maps #}
+{%                         for extcommunity_list_regexp_name, extcommunity_list_regexp_config in value.items() %}
+{%                             if extcommunity_list_regexp_name in services_data.referenced_components.ip_extcommunity_lists_regexp %}
+{%                                 do services_data.routing_policy[key].update({extcommunity_list_regexp_name: extcommunity_list_regexp_config}) %}
+{%                             endif %}
+{%                         endfor %}
+{%                     endif %}
 {%                 endif %}
 {%             endfor %}
 {%         endif %}
