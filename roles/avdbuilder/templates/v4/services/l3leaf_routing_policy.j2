@@ -1,1 +1,62 @@
+---
+{# This template renders routing policies for L3LEAF devices only #}
+{% set services_data = namespace() %}
+{% include 'logic.j2' %}
+
+{# Check if there are any BGP peers configured in any VRF for this site #}
+{% set has_bgp_peers = namespace(found=false) %}
+{% for tenant in services_data.tenants | emil.nbavd.structure_tenants %}
+{%     for vrf in tenant.vrfs %}
+{%         for ip_address in vrf.ip_addresses %}
+{%             if ip_address.interface is defined and ip_address.interface is not none %}
+{%                 if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                     if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
+{%                         if (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == services_data.site_name) or (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == "Global") or (ip_address.interface.device.site.name == none) %}
+{%                             set has_bgp_peers.found = true %}
+{%                         endif %}
+{%                     endif %}
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
+{%     endfor %}
+{% endfor %}
+{# Render routing policies only if there are BGP peers and referenced route-maps for this site #}
+{% if has_bgp_peers.found and services_data.referenced_route_maps != {} %}
+{% for policy_type, policies in services_data.routing_policy.items() %}
+{%     if policies != {} %}
+### {{ policy_type }}
+custom_structured_configuration_{{ policy_type }}:
+{%         for policy_name, policy_config in policies.items() %}
+  - name: {{ policy_name }}
+{%             for key, value in policy_config.items() %}
+{%                 if key == 'sequence_numbers' %}
+    {{ key }}:
+{%                     for seq_num, seq_config in value.items() %}
+      - sequence: {{ seq_num }}
+{%                         for config_key, config_value in seq_config.items() %}
+{%                             if config_key == 'match' %}
+        {{ config_key }}:
+{%                                 for match_item in config_value %}
+          - {{ match_item }}
+{%                                 endfor %}
+{%                             elif config_key == 'set' %}
+        {{ config_key }}:
+{%                                 for set_item in config_value %}
+          - {{ set_item }}
+{%                                 endfor %}
+{%                             else %}
+        {{ config_key }}: {{ config_value }}
+{%                             endif %}
+{%                         endfor %}
+{%                     endfor %}
+{%                 else %}
+    {{ key }}:
+{{ value | to_nice_yaml(indent=2) | indent(6) }}
+{%                 endif %}
+{%             endfor %}
+{%         endfor %}
+{%     endif %}
+{% endfor %}
+{% endif %}
+
 
