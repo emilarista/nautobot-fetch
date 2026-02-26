@@ -44,7 +44,7 @@ tenants:
 {%         set services_data.svis = [] %}
 {%         for svi in vrf.svis %}
 {%             set service_nodes = namespace(ips = []) %}
-{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.tags is defined and svi.vlan.tags and (services_data.site_name in (svi.vlan.tags | map(attribute='name') | list) or 'Global' in (svi.vlan.tags | map(attribute='name') | list) or 'global' in (svi.vlan.tags | map(attribute='name') | list) or services_data.site_name | lower in (svi.vlan.tags | map(attribute='name') | list | map('lower') | list))) or (svi.vlan.site is defined and svi.vlan.site is not none and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global"))) %}
 {%                 do services_data.svis.append(svi)%}
 {%             endif %}
 {%         endfor %}
@@ -53,7 +53,7 @@ tenants:
         svis:
 {%         for svi in vrf.svis %}
 {%             set service_nodes = namespace(ips = []) %}
-{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.site.name is defined and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global")) or svi.vlan.site == none) %}
+{%             if svi.vlan != none and svi.ip_addresses | length > 0 and svi.status.name == "Active" and ((svi.vlan.tags is defined and svi.vlan.tags and (services_data.site_name in (svi.vlan.tags | map(attribute='name') | list) or 'Global' in (svi.vlan.tags | map(attribute='name') | list) or 'global' in (svi.vlan.tags | map(attribute='name') | list) or services_data.site_name | lower in (svi.vlan.tags | map(attribute='name') | list | map('lower') | list))) or (svi.vlan.site is defined and svi.vlan.site is not none and (svi.vlan.site.name == services_data.site_name or svi.vlan.site.name == "Global"))) %}
           - id: {{ svi.vlan.vid }}
 {% set enabled = false if svi.vlan.tags | selectattr("name", "eq", "disable") | list else true %}
             enabled: {{ enabled }}  
@@ -105,20 +105,46 @@ tenants:
 {%             endif %}
 {%         endfor %}
 {%         endif %}
-{#      Building vrf bgp_peers #}
+{#      Building vrf bgp_peers - only if VRF has VLANs/SVIs on this site #}
+{%         set vrf_has_vlans = namespace(has_vlans = false) %}
+{%         if services_data.l2vlans | length > 0 %}
+{%             set vrf_has_vlans.has_vlans = true %}
+{%         endif %}
+{%         if services_data.svis | length > 0 %}
+{%             set vrf_has_vlans.has_vlans = true %}
+{%         endif %}
+{%         if vrf_has_vlans.has_vlans %}
         bgp_peers:
-{%         for ip_address in vrf.ip_addresses %}
-{%             if ip_address.interface is defined and ip_address.interface is not none %}
-{%                 if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
-{%                     if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
-{%                         if (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == services_data.site_name) or (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == "Global") or (ip_address.interface.device.site.name == none) %}
+{%             for ip_address in vrf.ip_addresses %}
+{%                 if ip_address.interface is defined and ip_address.interface is not none %}
+{%                     if ip_address.interface.device.name is defined and ip_address.interface.device.name is not none %}
+{%                         if ip_address.interface.device.device_role.name == "bgp_peer" and ip_address.interface.device.cf_bgp_asn != "" %}
+{%                             if (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == services_data.site_name) or (ip_address.interface.device.site.name is defined and ip_address.interface.device.site.name == "Global") or (ip_address.interface.device.site.name == none) %}
 {%                             set peer_ip = ip_address.address.split("/")[0] %}
+{%                             set peer_subnet_for_nodes = [ip_address.address | ansible.utils.ipaddr("host/prefix") | ansible.utils.ipaddr("subnet")] %}
+{%                             set peering_ns = namespace(nodes=[]) %}
+{%                             for svi in vrf.svis %}
+{%                                 if svi.ip_addresses is defined and svi.ip_addresses | length > 0 %}
+{%                                     for svi_ip in svi.ip_addresses %}
+{%                                         if svi_ip.device is defined and svi_ip.device is not none and svi_ip.device != "" and svi_ip.device != ip_address.interface.device.name %}
+{%                                             set svi_ip_subnet = [svi_ip.address | ansible.utils.ipaddr("host/prefix") | ansible.utils.ipaddr("subnet")] %}
+{%                                             if peer_subnet_for_nodes == svi_ip_subnet %}
+{%                                                 do peering_ns.nodes.append(svi_ip.device) %}
+{%                                             endif %}
+{%                                         endif %}
+{%                                     endfor %}
+{%                                 endif %}
+{%                             endfor %}
+{%                             set peering_nodes_final = peering_ns.nodes | unique | list %}
+{%                             if peering_nodes_final | length == 0 and services_data.default_peering_devices is defined and services_data.default_peering_devices | length > 0 %}
+{%                                 set peering_nodes_final = services_data.default_peering_devices %}
+{%                             endif %}
 {# need to add data model for this #}
           - ip_address: {{ peer_ip }}
             remote_as: {{ ip_address.interface.device.cf_bgp_asn }}
             description: {{ ip_address.interface.device.name }}
-{%                             if services_data.default_peering_devices is defined and services_data.default_peering_devices | length > 0 %}
-            nodes: {{ services_data.default_peering_devices }}
+{%                             if peering_nodes_final | length > 0 %}
+            nodes: {{ peering_nodes_final }}
 {%                             endif %}
             maximum_routes: {{ services_data.bgp_peers_maximum_routes }}
 {%                             if ip_address.interface.device.cf_default_originate is defined and ip_address.interface.device.cf_default_originate is not none %}
@@ -165,11 +191,12 @@ tenants:
 {%                                     endif %}
 {%                                 endfor %}
 {%                             endif %}
+{%                             endif %}
 {%                         endif %}
 {%                     endif %}
 {%                 endif %}
-{%             endif %}
 {%         endfor %}
+{%         endif %}
 {#      Building vrf l3_interfaces #}
         l3_interfaces:
 {%         for ip_address in vrf.ip_addresses %}
